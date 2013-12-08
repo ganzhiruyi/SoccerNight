@@ -8,7 +8,9 @@ public class SoccerNight extends Game {
 	FPSLogger fps;
 	@Override
 	public void create() {
-		
+		Assets.load();
+		Settings.load();
+		setScreen(new MainScreen(this));
 	}
 	@Override
 	public void render() {

@@ -11,6 +11,7 @@ public class SoccerNight extends Game {
 		Assets.load();
 		Settings.load();
 		setScreen(new MainScreen(this));
+		fps = new FPSLogger();
 	}
 	@Override
 	public void render() {

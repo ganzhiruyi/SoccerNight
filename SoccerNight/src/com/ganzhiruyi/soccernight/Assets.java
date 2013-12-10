@@ -15,7 +15,7 @@ public class Assets {
 
 	public static void load() {
 		// load the source
-		background = loadTexture("libgdx.png");
+		background = loadTexture("main_bg.jpg");
 		backgroundRegion = new TextureRegion(background);
 		//items = loadTexture("item");
 		font = new BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"),false);

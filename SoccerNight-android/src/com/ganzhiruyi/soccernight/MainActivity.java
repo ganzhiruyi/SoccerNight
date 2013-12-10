@@ -9,6 +9,6 @@ public class MainActivity extends AndroidApplication {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initialize(new SoccerNight(), false);
+        initialize(new SoccerNight(), true);
     }
 }

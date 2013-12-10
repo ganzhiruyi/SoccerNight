@@ -7,9 +7,9 @@ public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "SoccerNight";
-		cfg.useGL20 = false;
-		cfg.width = 320;
-		cfg.height = 480;
+		cfg.useGL20 = true;
+		cfg.width = 480;
+		cfg.height = 320;
 		new LwjglApplication(new SoccerNight(), cfg);
 	}
 }

@@ -25,7 +25,7 @@ public class Settings {
 			if(!file.exists()){
 				file.createNewFile();
 			}
-			in = new BufferedReader(new InputStreamReader(Gdx.files.external(
+			in = new BufferedReader(new InputStreamReader(Gdx.files.internal(
 					HIGHSCORE_RECORDE).read()));
 			soundEnable = Boolean.parseBoolean(in.readLine());
 			int highscore;
@@ -51,7 +51,7 @@ public class Settings {
 		// save the highscores
 		BufferedWriter out = null;
 		try {
-			out = new BufferedWriter(new OutputStreamWriter(Gdx.files.external(
+			out = new BufferedWriter(new OutputStreamWriter(Gdx.files.internal(
 					HIGHSCORE_RECORDE).write(false)));
 			out.write(String.valueOf(soundEnable) + "\n");
 			for (int hScore : highscores) {

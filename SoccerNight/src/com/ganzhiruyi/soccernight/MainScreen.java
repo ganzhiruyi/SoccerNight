@@ -8,11 +8,10 @@ import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class MainScreen implements Screen {
-	public static final float SCREEN_HIGHT = 480;
-	public static final float SCREEN_WIDTH = 320;
 	public static final String STR_SOCCERNight = "Soccer Night";
 	public static final String STR_START = "Start";
 	public static final String STR_QUIT = "Quit";
@@ -25,8 +24,8 @@ public class MainScreen implements Screen {
 	public MainScreen(Game game) {
 		// init the main screen
 		this.game = game;
-		camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HIGHT);
-		camera.position.set(SCREEN_WIDTH / 2, SCREEN_HIGHT / 2, 10);
+		camera = new OrthographicCamera(Config.SCREEN_WIDTH, Config.SCREEN_HIGHT);
+		camera.position.set(Config.SCREEN_WIDTH / 2, Config.SCREEN_HIGHT / 2, 10);
 		batch = new SpriteBatch();
 		touchPoint = new Vector3();
 	}
@@ -34,6 +33,11 @@ public class MainScreen implements Screen {
 		//define the mainscreen to other screen logic, deal with touch events
 		if(Gdx.input.justTouched()){
 			touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			Rectangle startRec = new Rectangle(Config.SCREEN_WIDTH/2-40, Config.SCREEN_HIGHT/2-40, 80, 80);
+			if(OverlapTester.pointInRectangle(startRec, touchPoint.x, touchPoint.y)){
+				game.setScreen(new GameScreen(game));
+				return;
+			}
 		}
 	}
 	private void draw(float delta){
@@ -46,15 +50,15 @@ public class MainScreen implements Screen {
 		
 		batch.disableBlending();
 		batch.begin();
-		batch.draw(Assets.backgroundRegion, 0, 0, SCREEN_WIDTH, SCREEN_HIGHT);
+		batch.draw(Assets.backgroundRegion, Config.SCREEN_WIDTH/3, Config.SCREEN_HIGHT/3*2, Config.SCREEN_WIDTH/3,Config.SCREEN_HIGHT/3);
 		batch.end();
 		
 		//draw the words in main screen
 		batch.enableBlending();
 		batch.begin();
-		Assets.font.drawMultiLine(batch, STR_SOCCERNight, SCREEN_WIDTH/2, SCREEN_HIGHT-10, 20, HAlignment.CENTER);
-		Assets.font.drawMultiLine(batch, STR_START, SCREEN_WIDTH/2, SCREEN_HIGHT/2, 20, HAlignment.CENTER);
-		Assets.font.drawMultiLine(batch, STR_QUIT, SCREEN_WIDTH/2, SCREEN_HIGHT/3, 20, HAlignment.CENTER);
+		Assets.font.drawMultiLine(batch, STR_SOCCERNight, Config.SCREEN_WIDTH/2, Config.SCREEN_HIGHT-10, 20, HAlignment.CENTER);
+		Assets.font.drawMultiLine(batch, STR_START, Config.SCREEN_WIDTH/2, Config.SCREEN_HIGHT/2, 20, HAlignment.CENTER);
+		Assets.font.drawMultiLine(batch, STR_QUIT, Config.SCREEN_WIDTH/2, Config.SCREEN_HIGHT/3, 20, HAlignment.CENTER);
 		batch.end();
 	}
 

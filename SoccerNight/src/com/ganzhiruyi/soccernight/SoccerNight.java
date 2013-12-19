@@ -2,6 +2,9 @@ package com.ganzhiruyi.soccernight;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.ganzhiruyi.soccernight.screen.MainScreen;
+import com.ganzhiruyi.soccernight.utils.Assets;
+import com.ganzhiruyi.soccernight.utils.Settings;
 
 public class SoccerNight extends Game {
 	boolean firstTimeCreate = true;

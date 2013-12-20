@@ -6,8 +6,9 @@ public class DynamicObject extends GameObject {
 	public static final float RESISTANCE_ACCEL = 6f;
 	protected Vector2 accel;
 	protected Vector2 velocity;
+
 	public enum DyObjectState {
-		IDLE,DEAD,MOVING;
+		IDLE, DEAD, MOVING;
 	}
 
 	public DynamicObject(float x, float y, float width, float height) {
@@ -31,9 +32,16 @@ public class DynamicObject extends GameObject {
 	public void setVelocity(Vector2 velocity) {
 		this.velocity = velocity;
 	}
+
 	public float calOffset(float v, float accel, float t) {
 		// calculate the offset
 		return v * t + accel * t * t / 2;
+	}
+
+	public boolean isStill() {
+		if (Math.abs(velocity.x) < 0.5 && Math.abs(velocity.y) < 0.5)
+			return true;
+		return false;
 	}
 
 }

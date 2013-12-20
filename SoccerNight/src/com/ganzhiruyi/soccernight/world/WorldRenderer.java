@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ganzhiruyi.soccernight.role.Bob;
+import com.ganzhiruyi.soccernight.utils.Animation;
+import com.ganzhiruyi.soccernight.utils.Assets;
 
 public class WorldRenderer {
 	public static final float FRUSTUM_WIDTH = 10;
@@ -25,7 +27,7 @@ public class WorldRenderer {
 		}
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
-		renderBackground();
+		//renderBackground();
 		renderElement();
 	}
 	private void renderBackground() {
@@ -36,17 +38,33 @@ public class WorldRenderer {
 	private void renderElement() {
 		batch.enableBlending();
 		batch.begin();
+		renderBob();
 		batch.end();
 	}
 	private void renderBob(){
-		TextureRegion keyFrame;
 		Bob bob = world.getBob();
+		TextureRegion region;
+		float stateTime = bob.getStateTime();
 		switch(bob.getState()){
 		case IDLE:
-			
+			System.out.println("-----------------------bob state is idle");
+			region = Assets.aniBobIdle.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+			batch.draw(region, bob.position.x, bob.position.y);
 			break;
 		case MOVING:
-			
+			System.out.println("-----------------------bob state is moving");
+			float x = bob.getVelocity().x;
+			float y = bob.getVelocity().y;
+			if(x < 0){
+				region = Assets.aniBobL.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+				batch.draw(region, x, y);
+			}
+			else if(x > 0){
+				region = Assets.aniBobR.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+				batch.draw(region, x, y);
+			}
+			break;
+		default:
 			break;
 		}
 	}

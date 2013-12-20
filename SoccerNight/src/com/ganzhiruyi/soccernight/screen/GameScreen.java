@@ -3,10 +3,15 @@ package com.ganzhiruyi.soccernight.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.world.World;
+import com.ganzhiruyi.soccernight.world.World.WorldListener;
+import com.ganzhiruyi.soccernight.world.WorldRenderer;
 
 public class GameScreen implements Screen {
 	public static final	int GAME_READY = 0;
@@ -19,7 +24,9 @@ public class GameScreen implements Screen {
 	OrthographicCamera guiCam;
 	Vector3 touchPoint;
 	SpriteBatch batch;
-	
+	WorldListener listener;
+	World world;
+	WorldRenderer renderer;
 	
 	public GameScreen(Game game){
 		this.game = game;
@@ -27,10 +34,28 @@ public class GameScreen implements Screen {
 		guiCam.position.set(Config.SCREEN_WIDTH/2, Config.SCREEN_HIGHT/2, 0);
 		touchPoint = new Vector3();
 		batch = new SpriteBatch();
+		listener = new WorldListener() {
+			
+			@Override
+			public void hit() {
+				
+			}
+			
+			@Override
+			public void getSoccer(int type) {
+				
+			}
+			
+			@Override
+			public void getCoins() {
+				
+			}
+		};
+		world = new World(listener);
+		renderer = new WorldRenderer(batch, world);
 	}
 	public void update (float delta) {
 		if (delta > 0.1f) delta = 0.1f;
-
 		switch (state) {
 		case GAME_READY:
 			updateReady();
@@ -64,7 +89,13 @@ public class GameScreen implements Screen {
 	private void updateRunning(float delta) {
 		if(Gdx.input.justTouched()){
 			state = GAME_PAUSED;
+			return;
 		}
+		float accelX = Gdx.input.getAccelerometerX();
+		float accelY = Gdx.input.getAccelerometerY();
+		System.out.println("accelx: " + accelX + ",accelY: " + accelY);
+		if(Math.abs(accelX) < 0.01 && Math.abs(accelY) < 0.01) return;
+		world.update(delta, accelX, accelY);
 	}
 	private void updateReady() {
 		if(Gdx.input.justTouched()){
@@ -72,6 +103,15 @@ public class GameScreen implements Screen {
 		}
 	}
 	private void draw(float delta){
+		GLCommon gl = Gdx.gl;
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+		renderer.render();
+
+		guiCam.update();
+		batch.setProjectionMatrix(guiCam.combined);
+		batch.enableBlending();
+		batch.begin();
 		switch (state){
 		case GAME_READY:
 			drawReady();
@@ -89,7 +129,7 @@ public class GameScreen implements Screen {
 			drawLevelEnd();
 			break;
 		}
-			
+		batch.end();
 	}
 	private void drawLevelEnd() {
 		
@@ -101,7 +141,6 @@ public class GameScreen implements Screen {
 		
 	}
 	private void drawRunning(float delta) {
-		
 	}
 	private void drawReady(){
 		

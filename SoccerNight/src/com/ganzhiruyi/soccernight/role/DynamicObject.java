@@ -37,6 +37,15 @@ public class DynamicObject extends GameObject {
 		// calculate the offset
 		return v * t + accel * t * t / 2;
 	}
+	public float updateVelocity(float v, float accel, float t) {
+		float res = v;
+		if(Math.abs(res) > 0.5){
+			if(res > 0){
+				
+			}
+		}
+		return res;
+	}
 
 	public boolean isStill() {
 		if (Math.abs(velocity.x) < 0.5 && Math.abs(velocity.y) < 0.5)

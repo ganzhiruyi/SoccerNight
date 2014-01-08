@@ -53,6 +53,7 @@ public class GameScreen implements Screen {
 		};
 		world = new World(listener);
 		renderer = new WorldRenderer(batch, world);
+		state = GAME_RUNNING;
 	}
 	public void update (float delta) {
 		if (delta > 0.1f) delta = 0.1f;
@@ -93,7 +94,6 @@ public class GameScreen implements Screen {
 		}
 		float accelX = Gdx.input.getAccelerometerX();
 		float accelY = Gdx.input.getAccelerometerY();
-		System.out.println("accelx: " + accelX + ",accelY: " + accelY);
 		if(Math.abs(accelX) < 0.01 && Math.abs(accelY) < 0.01) return;
 		world.update(delta, accelX, accelY);
 	}
@@ -104,8 +104,8 @@ public class GameScreen implements Screen {
 	}
 	private void draw(float delta){
 		GLCommon gl = Gdx.gl;
+		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
 		renderer.render();
 
 		guiCam.update();
@@ -141,6 +141,7 @@ public class GameScreen implements Screen {
 		
 	}
 	private void drawRunning(float delta) {
+		
 	}
 	private void drawReady(){
 		

@@ -27,15 +27,15 @@ public class WorldRenderer {
 		}
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
-		//renderBackground();
-		renderElement();
+		renderBackground();
+		renderObjects();
 	}
 	private void renderBackground() {
 		batch.disableBlending();
 		batch.begin();
 		batch.end();
 	}
-	private void renderElement() {
+	private void renderObjects() {
 		batch.enableBlending();
 		batch.begin();
 		renderBob();
@@ -47,12 +47,10 @@ public class WorldRenderer {
 		float stateTime = bob.getStateTime();
 		switch(bob.getState()){
 		case IDLE:
-			System.out.println("-----------------------bob state is idle");
-			region = Assets.aniBobIdle.getKeyFrame(stateTime, Animation.ANIMATION_NONLOOPING);
+			region = Assets.aniBobIdle.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
 			batch.draw(region, bob.position.x, bob.position.y);
 			break;
 		case MOVING:
-			System.out.println("-----------------------bob state is moving");
 			float x = bob.getVelocity().x;
 			float y = bob.getVelocity().y;
 			if(x < 0){

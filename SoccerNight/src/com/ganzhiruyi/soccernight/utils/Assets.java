@@ -23,7 +23,6 @@ public class Assets {
 		TextureRegion BobRightRegion = new TextureRegion(loadTexture("test.png"));
 		TextureRegion[] BobRightRegions = BobRightRegion.split(32, 48)[1];
 		TextureRegion[] tmp = BobRightRegion.split(32, 48)[1];
-		System.out.println("************size: " + tmp.length);
 		TextureRegion[] BobLeftRegions = reversePicture(tmp);
 		aniBobL = new Animation(0.2f, BobLeftRegions);
 		aniBobR = new Animation(0.2f, BobRightRegions);

@@ -55,7 +55,6 @@ public class MainScreen implements Screen {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
-		System.out.println("delta time: " + delta);
 		
 		batch.disableBlending();
 		batch.begin();
@@ -69,7 +68,7 @@ public class MainScreen implements Screen {
 		Assets.font.drawMultiLine(batch, STR_START, Config.SCREEN_WIDTH/2, Config.SCREEN_HIGHT/2, 20, HAlignment.CENTER);
 		Assets.font.drawMultiLine(batch, STR_QUIT, Config.SCREEN_WIDTH/2, Config.SCREEN_HIGHT/3, 20, HAlignment.CENTER);
 		
-		TextureRegion region = Assets.aniBobR.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+		TextureRegion region = Assets.aniBobL.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
 		batch.draw(region, Config.SCREEN_WIDTH/2, Config.SCREEN_HIGHT/4);
 		batch.end();
 		stateTime += delta;

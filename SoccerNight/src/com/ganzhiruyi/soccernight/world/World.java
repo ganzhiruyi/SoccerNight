@@ -38,11 +38,11 @@ public class World {
 
 	public World(WorldListener listener) {
 		this.listener = listener;
-		initElements();
+		initObjects();
 		generateLevel();
 	}
 
-	private void initElements() {
+	private void initObjects() {
 		bob = new Bob(Config.SCREEN_WIDTH / 2, Config.SCREEN_HIGHT / 2);
 		soccers = new ArrayList<Soccer>();
 		zombies = new ArrayList<Zombie>();

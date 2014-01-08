@@ -20,7 +20,8 @@ public class Bob extends DynamicObject {
 		if(Math.abs(accelY) < 1) accelY = 0;
 		
 		float vx = velocity.x, vy = velocity.y;
-		velocity.add(accelX * deltaTime, accelY * deltaTime);
+		//velocity.add(accelX * deltaTime, accelY * deltaTime);
+		velocity.x = velocity.y = 0f;
 		position.add(calOffset(vx, accelX, deltaTime),
 				calOffset(vy, accelY, deltaTime));
 		if (position.x < 0)

@@ -49,6 +49,7 @@ public class World {
 		rand = new Random();
 		state = WORLD_STATE_RUNNING;
 	}
+
 	private void initZombies(){
 		for(int i = 0;i < 4;i++){
 			int edge = rand.nextInt(4);
@@ -93,6 +94,7 @@ public class World {
 	private void updateBob(float deltaTime, float accelX, float accelY) {
 		bob.update(deltaTime, accelX, accelY);
 	}
+	
 	private void updateZombies(float deltaTime){
 		int accelZombie = rand.nextInt(zombies.size());
 		for(int i = 0;i < zombies.size();i++){
@@ -120,6 +122,7 @@ public class World {
 	public Bob getBob() {
 		return bob;
 	}
+
 	public List<Zombie> getZombies(){
 		return zombies;
 	}

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * 
+<<<<<<< HEAD
  * @author ganzhiruyi The class is to test whether overlap is happen.
  */
 public class OverlapTester {

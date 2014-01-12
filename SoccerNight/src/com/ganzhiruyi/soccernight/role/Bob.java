@@ -35,3 +35,6 @@ public class Bob extends DynamicObject {
 		return BOB_VELOCITY;
 	}
 }
+		
+		
+		

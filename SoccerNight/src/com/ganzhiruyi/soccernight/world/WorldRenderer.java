@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ganzhiruyi.soccernight.role.Bob;
+import com.ganzhiruyi.soccernight.role.Soccer;
 import com.ganzhiruyi.soccernight.role.Zombie;
 import com.ganzhiruyi.soccernight.utils.Animation;
 import com.ganzhiruyi.soccernight.utils.Assets;
@@ -46,6 +47,7 @@ public class WorldRenderer {
 		batch.enableBlending();
 		batch.begin();
 		renderBob();
+		renderSoccers();
 		renderZombies();
 		batch.end();
 	}
@@ -103,6 +105,28 @@ public class WorldRenderer {
 				break;
 			}
 			
+		}
+	}
+	private void renderSoccers(){
+		List<Soccer> soccers = world.getSoccers();
+		if(soccers == null) return;
+		for(Soccer s : soccers){
+			TextureRegion region;
+			float stateTime = s.getStateTime();
+			float x = s.position.x;
+			float y = s.position.y;
+			switch(s.getState()){
+			case IDLE:
+				region = Assets.aniSoccerIdle;
+				batch.draw(region, x, y, Soccer.SOCCER_WIDTH, Soccer.SOCCER_HEIGHT);
+				break;
+			case MOVING:
+				region = Assets.aniSoccer.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING);
+				batch.draw(region, x, y, Soccer.SOCCER_WIDTH, Soccer.SOCCER_HEIGHT);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }

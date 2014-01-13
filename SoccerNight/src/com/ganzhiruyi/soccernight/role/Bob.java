@@ -1,7 +1,6 @@
 package com.ganzhiruyi.soccernight.role;
 
 import com.ganzhiruyi.soccernight.utils.Assets;
-import com.ganzhiruyi.soccernight.utils.Config;
 
 public class Bob extends DynamicObject {
 	public static float BOB_WIDTH = 51f;
@@ -19,7 +18,7 @@ public class Bob extends DynamicObject {
 	public void update(float deltaTime, float accelX, float accelY) {
 		super.update(deltaTime, accelX, accelY);
 	}
-
+	
 	@Override
 	protected float getWidth() {
 		return BOB_WIDTH;

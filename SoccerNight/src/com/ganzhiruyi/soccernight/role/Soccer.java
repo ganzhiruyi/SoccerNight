@@ -1,31 +1,46 @@
 package com.ganzhiruyi.soccernight.role;
 
-import com.ganzhiruyi.soccernight.utils.SoccerState;
-
 public class Soccer extends DynamicObject {
-	public static float SOCCER_WIDTH = 0.8f;
-	public static float SOCCER_HEIGHT = 0.8f;
-	private SoccerState state;
+	public static float SOCCER_WIDTH = 20f;
+	public static float SOCCER_HEIGHT = 20f;
+	public static float SOCCER_VELOCITY = 5f;
+	public int dirX = 0;
+	public int dirY = 0;
+//	static{
+//		SOCCER_WIDTH = Assets.aniSoccerIdle.getRegionWidth();
+//		SOCCER_HEIGHT = Assets.aniSoccerIdle.getRegionHeight();
+//	}
 
 	public Soccer(float x, float y) {
 		super(x, y, SOCCER_WIDTH, SOCCER_HEIGHT);
-		state = SoccerState.STAY;
+	}
+	
+	public void update(float deltaTime, float accelX, float accelY) {
+		super.update(deltaTime, accelX, accelY);
+		dirX = (int) accelX;
+		dirY = (int) accelY;
+	}
+	public void roll(float deltaTime){
+		super.update(deltaTime, dirX, dirY);
+	}
+	@Override
+	protected boolean isObjectCanOut() {
+		return true;
 	}
 
 	@Override
 	protected float getWidth() {
-		return 0;
+		return SOCCER_WIDTH;
 	}
 
 	@Override
 	protected float getHeight() {
-		return 0;
+		return SOCCER_HEIGHT;
 	}
 
 	@Override
 	protected float getVelocity() {
-		// TODO Auto-generated method stub
-		return 0;
+		return SOCCER_VELOCITY;
 	}
 
 }

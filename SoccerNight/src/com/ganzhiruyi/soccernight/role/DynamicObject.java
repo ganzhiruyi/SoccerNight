@@ -63,8 +63,8 @@ public abstract class DynamicObject extends GameObject {
 				isOutofStage = true;
 		}
 		//update the bounds of object, and the "+10f" is to relax the edge
-		bounds.x = position.x + 10f;
-		bounds.y = position.y + 10f;
+		bounds.x = position.x;
+		bounds.y = position.y;
 		
 	}
 	public DyObjectState getState() {

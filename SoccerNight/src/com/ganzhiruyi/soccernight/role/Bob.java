@@ -5,7 +5,7 @@ import com.ganzhiruyi.soccernight.utils.Assets;
 public class Bob extends DynamicObject {
 	public static float BOB_WIDTH = 51f;
 	public static float BOB_HEIGHT = 84f;
-	public static final float BOB_VELOCITY = 5f;
+	public static final float BOB_VELOCITY = 2f;
 	
 	static{
 		BOB_WIDTH = Assets.aniBobIdleL.getRegionWidth();

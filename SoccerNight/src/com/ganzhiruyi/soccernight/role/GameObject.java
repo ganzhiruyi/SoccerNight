@@ -9,6 +9,15 @@ public abstract class GameObject {
 
 	public GameObject(float x, float y, float width, float height) {
 		this.position = new Vector2(x, y);
-		this.bounds = new Rectangle(x, y, width - 20f, height - 20f);
+		if (isObjectWide())
+			this.bounds = new Rectangle(x, y, width, height);
+		else
+			this.bounds = new Rectangle(x + width / 4, y + width / 4,
+					width / 2, height / 2);
+	}
+
+	protected boolean isObjectWide() {
+		// represent the object bounds whether is wide,affect the judement of overlap
+		return false;
 	}
 }

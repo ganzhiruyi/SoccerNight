@@ -3,7 +3,7 @@ package com.ganzhiruyi.soccernight.role;
 public class Soccer extends DynamicObject {
 	public static float SOCCER_WIDTH = 20f;
 	public static float SOCCER_HEIGHT = 20f;
-	public static float SOCCER_VELOCITY = 5f;
+	public static float SOCCER_VELOCITY = 2f;
 	public int dirX = 0;
 	public int dirY = 0;
 //	static{
@@ -25,6 +25,10 @@ public class Soccer extends DynamicObject {
 	}
 	@Override
 	protected boolean isObjectCanOut() {
+		return true;
+	}
+	@Override
+	protected boolean isObjectWide() {
 		return true;
 	}
 

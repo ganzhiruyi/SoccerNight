@@ -118,13 +118,15 @@ public class World {
 			float x = bob.position.x > z.position.x ? 1 : -1;
 			float y = bob.position.y > z.position.y ? 1 : -1;
 			if (i == accelZombie) {
-				x += x > 0 ? 3 : -3;
-				y += y > 0 ? 3 : -3;
+				x += x > 0 ? 1 : -1;
+				y += y > 0 ? 1 : -1;
 			}
 			z.update(deltaTime, x, y);
 		}
 		if (rand.nextInt() % 50 == 0)
 			addZombie(rand.nextInt(4));
+		if (rand.nextInt() % 50 == 1)
+			addSoccer(0);
 	}
 
 	private void checkCollision(float deltaTime) {
@@ -142,10 +144,11 @@ public class World {
 	}
 
 	private void collisionSoccer(float deltaTime) {
-		for (Soccer s : soccers) {
+		for (int i = 0; i < soccers.size(); i++) {
+			Soccer s = soccers.get(i);
 			if (s.getState() == DyObjectState.MOVING) {
 				if (s.isOutofStage)
-					soccers.remove(s);
+					soccers.remove(i);
 				else
 					s.roll(deltaTime);
 			} else if (OverlapTester.overlapRectangles(bob.bounds, s.bounds)) {

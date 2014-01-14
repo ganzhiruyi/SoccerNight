@@ -6,10 +6,6 @@ public class Soccer extends DynamicObject {
 	public static float SOCCER_VELOCITY = 2f;
 	public int dirX = 0;
 	public int dirY = 0;
-//	static{
-//		SOCCER_WIDTH = Assets.aniSoccerIdle.getRegionWidth();
-//		SOCCER_HEIGHT = Assets.aniSoccerIdle.getRegionHeight();
-//	}
 
 	public Soccer(float x, float y) {
 		super(x, y, SOCCER_WIDTH, SOCCER_HEIGHT);

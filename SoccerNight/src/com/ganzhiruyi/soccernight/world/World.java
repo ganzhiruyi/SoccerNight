@@ -22,6 +22,7 @@ public class World {
 	public static final int WORLD_STATE_GAME_OVER = 2;
 	public static final int LIMIT_NUM_ZOMBIE = 5;
 	public static final int LIMIT_NUM_SOCCER = 4;
+	public static final int LEVEL_NUM_ZOMBIE = 10;
 
 	public interface WorldListener {
 		public void hit();
@@ -37,6 +38,8 @@ public class World {
 	private Bob bob;
 	private Random rand;
 	private int state;
+	private int zombieCount = 0;
+	private int score = 0;
 
 	public World(WorldListener listener) {
 		this.listener = listener;
@@ -60,8 +63,9 @@ public class World {
 	}
 
 	private void addZombie(int edge) {
-		if (zombies.size() > LIMIT_NUM_ZOMBIE)
+		if (zombies.size() >= LIMIT_NUM_ZOMBIE || zombieCount >= LEVEL_NUM_ZOMBIE)
 			return;
+		zombieCount++;
 		float x = 0, y = 0;
 		if (edge == 0)
 			x = rand.nextInt((int) Config.SCREEN_WIDTH);
@@ -84,7 +88,7 @@ public class World {
 	}
 
 	private void addSoccer(int type) {
-		if (soccers.size() > LIMIT_NUM_SOCCER)
+		if (soccers.size() >= LIMIT_NUM_SOCCER)
 			return;
 		float x = rand.nextInt((int) Config.SCREEN_WIDTH);
 		float y = rand.nextInt((int) Config.SCREEN_HEIGHT);
@@ -112,6 +116,12 @@ public class World {
 	}
 
 	private void updateZombies(float deltaTime) {
+		if(zombies.size() == 0){
+			if(zombieCount >= LEVEL_NUM_ZOMBIE){
+				state = WORLD_STATE_NEXT_LEVEL;
+			}
+			return;
+		}
 		int accelZombie = rand.nextInt(zombies.size());
 		for (int i = 0; i < zombies.size(); i++) {
 			Zombie z = zombies.get(i);
@@ -149,11 +159,19 @@ public class World {
 			if (s.getState() == DyObjectState.MOVING) {
 				if (s.isOutofStage)
 					soccers.remove(i);
-				else
+				else {
+					for (int j = 0; j < zombies.size(); j++) {
+						Zombie z = zombies.get(j);
+						if (OverlapTester.overlapRectangles(s.bounds, z.bounds)) {
+							zombies.remove(j);
+							score++;
+						}
+					}
 					s.roll(deltaTime);
+				}
 			} else if (OverlapTester.overlapRectangles(bob.bounds, s.bounds)) {
-				float accelX = bob.position.x > 0 ? 1 : -1;
-				float accelY = bob.position.y > 0 ? 1 : -1;
+				float accelX = bob.velocity.x > 0 ? 1 : -1;
+				float accelY = accelX * (bob.velocity.y / bob.velocity.x);
 				s.update(deltaTime, accelX, accelY);
 			}
 		}
@@ -173,5 +191,9 @@ public class World {
 
 	public int getState() {
 		return state;
+	}
+	
+	public int getScore(){
+		return score;
 	}
 }

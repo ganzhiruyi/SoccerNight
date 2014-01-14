@@ -33,6 +33,10 @@ public class Bob extends DynamicObject {
 	protected float getVelocity() {
 		return BOB_VELOCITY;
 	}
+	@Override
+	protected boolean isObjectWide() {
+		return true;
+	}
 }
 		
 		

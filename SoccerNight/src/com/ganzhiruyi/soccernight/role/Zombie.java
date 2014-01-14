@@ -2,7 +2,7 @@ package com.ganzhiruyi.soccernight.role;
 
 
 public class Zombie extends DynamicObject {
-	private static final float ZOMBIE_VELOCITY = 1f; 
+	private static final float ZOMBIE_VELOCITY = 0.5f; 
 	public static float ZOMBIE_WIDTH = 97f;
 	public static float ZOMBIE_HEIGHT = 50f;
 	static{

@@ -91,7 +91,9 @@ public class GameScreen implements Screen {
 	}
 
 	private void updateLevelEnd() {
-
+		if (Gdx.input.justTouched()){
+			game.setScreen(new MainScreen(game));
+		}
 	}
 
 	private void updatePaused() {
@@ -127,6 +129,10 @@ public class GameScreen implements Screen {
 		}
 		if (world.getState() == World.WORLD_STATE_GAME_OVER) {
 			state = GAME_OVER;
+			return;
+		}
+		else if (world.getState() == World.WORLD_STATE_NEXT_LEVEL) {
+			state = GAME_LEVEL_END;
 			return;
 		}
 		world.update(delta, accelX, accelY);
@@ -169,11 +175,15 @@ public class GameScreen implements Screen {
 	}
 
 	private void drawLevelEnd() {
-
+		String text = "You win!\n Score: " + world.getScore();
+		Assets.font.drawMultiLine(batch, text, Config.SCREEN_WIDTH / 2,
+				Config.SCREEN_HEIGHT / 2, 20, HAlignment.CENTER);
+		
 	}
 
 	private void drawOver() {
-		Assets.font.drawMultiLine(batch, "Game over!", Config.SCREEN_WIDTH / 2,
+		String text = "Game over!\n Score: " + world.getScore();
+		Assets.font.drawMultiLine(batch, text, Config.SCREEN_WIDTH / 2,
 				Config.SCREEN_HEIGHT / 2, 20, HAlignment.CENTER);
 	}
 

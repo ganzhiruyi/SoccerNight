@@ -20,8 +20,8 @@ public class Assets {
 	public static Animation aniZombieR;
 	public static TextureRegion aniZombieIdleL;
 	public static TextureRegion aniZombieIdleR;
-	public static TextureRegion aniSoccerIdle;
-	public static Animation aniSoccer;
+	public static TextureRegion aniRedSocIdle;
+	public static Animation aniRedSoc;
 	public static TextureRegion aniBlueSocIdle;
 	public static Animation aniBlueSoc;
 	public static Texture level_1_bg;
@@ -47,11 +47,11 @@ public class Assets {
 		aniZombieL = new Animation(0.1f, zombieRegions[0]);
 		aniZombieR = new Animation(0.1f, zombieRegions[1]);
 		
-		TextureRegion[][] soccerRegions = new TextureRegion(loadTexture("soccer.png")).split(43, 42);
-		aniSoccerIdle = soccerRegions[0][0];
-		aniSoccer = new Animation(0.1f, soccerRegions[0]);
+		TextureRegion[][] redSocRegions = new TextureRegion(loadTexture("red_soccer.png")).split(241, 241);
+		aniRedSocIdle = redSocRegions[0][0];
+		aniRedSoc = new Animation(0.1f, redSocRegions[0]);
 		
-		TextureRegion[][] blueSocRegions = new TextureRegion(loadTexture("blue.png")).split(239, 241);
+		TextureRegion[][] blueSocRegions = new TextureRegion(loadTexture("blue_soccer.png")).split(241, 241);
 		aniBlueSocIdle = blueSocRegions[0][0];
 		aniBlueSoc = new Animation(0.1f, blueSocRegions[0]);
 	}

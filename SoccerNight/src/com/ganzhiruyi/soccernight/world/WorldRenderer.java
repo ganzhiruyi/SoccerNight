@@ -136,13 +136,13 @@ public class WorldRenderer {
 			float y = s.position.y;
 			switch (s.getState()) {
 			case IDLE:
-				region = s instanceof LineSoccer ? Assets.aniSoccerIdle
+				region = s instanceof LineSoccer ? Assets.aniRedSocIdle
 						: Assets.aniBlueSocIdle;
 				batch.draw(region, x, y, Soccer.SOCCER_WIDTH,
 						Soccer.SOCCER_HEIGHT);
 				break;
 			case MOVING:
-				region = s instanceof LineSoccer ? Assets.aniSoccer
+				region = s instanceof LineSoccer ? Assets.aniRedSoc
 						.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING)
 						: Assets.aniBlueSoc.getKeyFrame(stateTime,
 								Animation.ANIMATION_LOOPING);

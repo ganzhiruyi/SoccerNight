@@ -1,4 +1,7 @@
-package com.ganzhiruyi.soccernight.role;
+package com.ganzhiruyi.soccernight.zombie;
+
+import com.ganzhiruyi.soccernight.object.Bob;
+import com.ganzhiruyi.soccernight.object.DynamicObject;
 
 
 public class Zombie extends DynamicObject {

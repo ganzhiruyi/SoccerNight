@@ -1,4 +1,4 @@
-package com.ganzhiruyi.soccernight.role;
+package com.ganzhiruyi.soccernight.object;
 
 import com.ganzhiruyi.soccernight.utils.Assets;
 

@@ -22,6 +22,8 @@ public class Assets {
 	public static TextureRegion aniZombieIdleR;
 	public static TextureRegion aniSoccerIdle;
 	public static Animation aniSoccer;
+	public static TextureRegion aniBlueSocIdle;
+	public static Animation aniBlueSoc;
 	public static Texture level_1_bg;
 
 	public static void load() {
@@ -48,6 +50,10 @@ public class Assets {
 		TextureRegion[][] soccerRegions = new TextureRegion(loadTexture("soccer.png")).split(43, 42);
 		aniSoccerIdle = soccerRegions[0][0];
 		aniSoccer = new Animation(0.1f, soccerRegions[0]);
+		
+		TextureRegion[][] blueSocRegions = new TextureRegion(loadTexture("blue.png")).split(239, 241);
+		aniBlueSocIdle = blueSocRegions[0][0];
+		aniBlueSoc = new Animation(0.1f, blueSocRegions[0]);
 	}
 
 	public static TextureRegion[] reversePicture(TextureRegion[] region){

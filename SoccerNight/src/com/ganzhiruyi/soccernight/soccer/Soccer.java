@@ -1,11 +1,11 @@
-package com.ganzhiruyi.soccernight.role;
+package com.ganzhiruyi.soccernight.soccer;
 
-public class Soccer extends DynamicObject {
+import com.ganzhiruyi.soccernight.object.DynamicObject;
+
+public abstract class Soccer extends DynamicObject {
 	public static float SOCCER_WIDTH = 20f;
 	public static float SOCCER_HEIGHT = 20f;
 	public static float SOCCER_VELOCITY = 2f;
-	public int dirX = 0;
-	public int dirY = 0;
 
 	public Soccer(float x, float y) {
 		super(x, y, SOCCER_WIDTH, SOCCER_HEIGHT);
@@ -13,12 +13,8 @@ public class Soccer extends DynamicObject {
 	
 	public void update(float deltaTime, float accelX, float accelY) {
 		super.update(deltaTime, accelX, accelY);
-		dirX = (int) accelX;
-		dirY = (int) accelY;
 	}
-	public void roll(float deltaTime){
-		super.update(deltaTime, dirX, dirY);
-	}
+	public abstract void roll(float deltaTime);
 	@Override
 	protected boolean isObjectCanOut() {
 		return true;

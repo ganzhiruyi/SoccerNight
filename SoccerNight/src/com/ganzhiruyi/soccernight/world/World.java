@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.ganzhiruyi.soccernight.role.Bob;
-import com.ganzhiruyi.soccernight.role.DynamicObject.DyObjectState;
-import com.ganzhiruyi.soccernight.role.Soccer;
-import com.ganzhiruyi.soccernight.role.Zombie;
+import com.ganzhiruyi.soccernight.object.Bob;
+import com.ganzhiruyi.soccernight.object.DynamicObject.DyObjectState;
+import com.ganzhiruyi.soccernight.soccer.LineSoccer;
+import com.ganzhiruyi.soccernight.soccer.PaddySoccer;
+import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.zombie.Zombie;
 
 /**
  * 
@@ -63,7 +65,8 @@ public class World {
 	}
 
 	private void addZombie(int edge) {
-		if (zombies.size() >= LIMIT_NUM_ZOMBIE || zombieCount >= LEVEL_NUM_ZOMBIE)
+		if (zombies.size() >= LIMIT_NUM_ZOMBIE
+				|| zombieCount >= LEVEL_NUM_ZOMBIE)
 			return;
 		zombieCount++;
 		float x = 0, y = 0;
@@ -83,16 +86,24 @@ public class World {
 
 	private void initSoccers() {
 		for (int i = 0; i < 4; i++) {
-			addSoccer(0);
+			addSoccer(i % 2);
 		}
 	}
 
 	private void addSoccer(int type) {
 		if (soccers.size() >= LIMIT_NUM_SOCCER)
 			return;
-		float x = rand.nextInt((int) Config.SCREEN_WIDTH);
-		float y = rand.nextInt((int) Config.SCREEN_HEIGHT);
-		soccers.add(new Soccer(x, y));
+		float w = Bob.BOB_WIDTH, h = Bob.BOB_HEIGHT;
+		int x = rand.nextInt((int) (Config.SCREEN_WIDTH - w));
+		int y = rand.nextInt((int) (Config.SCREEN_HEIGHT - h));
+		if (x < w)
+			x = (int) w;
+		if (y < h)
+			y = (int) h;
+		if (type == 0)
+			soccers.add(new LineSoccer(x, y));
+		else if (type == 1)
+			soccers.add(new PaddySoccer(x, y));
 	}
 
 	private void generateLevel() {
@@ -116,8 +127,8 @@ public class World {
 	}
 
 	private void updateZombies(float deltaTime) {
-		if(zombies.size() == 0){
-			if(zombieCount >= LEVEL_NUM_ZOMBIE){
+		if (zombies.size() == 0) {
+			if (zombieCount >= LEVEL_NUM_ZOMBIE) {
 				state = WORLD_STATE_NEXT_LEVEL;
 			}
 			return;
@@ -133,10 +144,11 @@ public class World {
 			}
 			z.update(deltaTime, x, y);
 		}
-		if (rand.nextInt() % 50 == 0)
+		int nextObject = rand.nextInt() % 50;
+		if (nextObject <= 1)
+			addSoccer(nextObject);
+		else if(nextObject == 2)
 			addZombie(rand.nextInt(4));
-		if (rand.nextInt() % 50 == 1)
-			addSoccer(0);
 	}
 
 	private void checkCollision(float deltaTime) {
@@ -157,21 +169,19 @@ public class World {
 		for (int i = 0; i < soccers.size(); i++) {
 			Soccer s = soccers.get(i);
 			if (s.getState() == DyObjectState.MOVING) {
-				if (s.isOutofStage)
-					soccers.remove(i);
-				else {
-					for (int j = 0; j < zombies.size(); j++) {
-						Zombie z = zombies.get(j);
-						if (OverlapTester.overlapRectangles(s.bounds, z.bounds)) {
-							zombies.remove(j);
-							score++;
-						}
+				for (int j = 0; j < zombies.size(); j++) {
+					Zombie z = zombies.get(j);
+					if (OverlapTester.overlapRectangles(s.bounds, z.bounds)) {
+						zombies.remove(j);
+						score++;
 					}
-					s.roll(deltaTime);
 				}
+				s.roll(deltaTime);
+			} else if (s.getState() == DyObjectState.DEAD) {
+				soccers.remove(i);
 			} else if (OverlapTester.overlapRectangles(bob.bounds, s.bounds)) {
-				float accelX = bob.velocity.x > 0 ? 1 : -1;
-				float accelY = accelX * (bob.velocity.y / bob.velocity.x);
+				float accelX = bob.velocity.x;
+				float accelY = bob.velocity.y;
 				s.update(deltaTime, accelX, accelY);
 			}
 		}
@@ -192,8 +202,8 @@ public class World {
 	public int getState() {
 		return state;
 	}
-	
-	public int getScore(){
+
+	public int getScore() {
 		return score;
 	}
 }

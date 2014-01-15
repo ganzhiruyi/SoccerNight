@@ -1,4 +1,4 @@
-package com.ganzhiruyi.soccernight.role;
+package com.ganzhiruyi.soccernight.object;
 
 import com.badlogic.gdx.math.Vector2;
 import com.ganzhiruyi.soccernight.utils.Config;
@@ -9,10 +9,15 @@ public abstract class DynamicObject extends GameObject {
 	protected float stateTime;
 	public boolean isRight = true;
 	public boolean isUp = true;
+
 	public enum DyObjectState {
 		IDLE, DEAD, MOVING;
 	}
-	public boolean isOutofStage;
+	public enum EdgeType{
+		NONE, BOTTOM, LEFT, TOP, RIGHT;
+	}
+	protected boolean isOutofStage;
+	protected EdgeType isOnStageEdge;
 
 	public DynamicObject(float x, float y, float width, float height) {
 		super(x, y, width, height);
@@ -20,7 +25,9 @@ public abstract class DynamicObject extends GameObject {
 		state = DyObjectState.IDLE;
 		stateTime = 0f;
 		isOutofStage = false;
+		isOnStageEdge = EdgeType.NONE;
 	}
+
 	public void update(float deltaTime, float accelX, float accelY) {
 		if (Math.abs(accelX) < 0.1 && Math.abs(accelY) < 0.1) {
 			state = DyObjectState.IDLE;
@@ -30,43 +37,53 @@ public abstract class DynamicObject extends GameObject {
 		}
 		if (Math.abs(accelX) < 0.1)
 			accelX = 0;
-		else{
-			velocity.x = accelX*getVelocity();
+		else {
+			velocity.x = accelX;
 			isRight = velocity.x > 0;
 		}
-			
+
 		if (Math.abs(accelY) < 0.1)
 			accelY = 0;
-		else{
-			velocity.y = accelY*getVelocity();
+		else {
+			velocity.y = accelY;
 			isUp = velocity.y > 0;
 		}
 		updatePosition();
 		state = DyObjectState.MOVING;
 		stateTime += deltaTime;
 	}
-	protected void updatePosition(){
-		position.add(velocity.x, velocity.y);
+
+	protected void updatePosition() {
+		position.add(velocity.x * getVelocity(), velocity.y * getVelocity());
 		float width = getWidth(), height = getHeight();
-		if(!isObjectCanOut()){
-			if (position.x < 0)
+		if (!isObjectCanOut()) {
+			if (position.x < 0) {
 				position.x = 0;
-			if (position.x + width > Config.SCREEN_WIDTH)
+				isOnStageEdge = EdgeType.LEFT;
+			}
+			if (position.x + width > Config.SCREEN_WIDTH) {
 				position.x = Config.SCREEN_WIDTH - width;
-			if (position.y < 0)
+				isOnStageEdge = EdgeType.RIGHT;
+			}
+			if (position.y < 0) {
 				position.y = 0;
-			if (position.y + height > Config.SCREEN_HEIGHT)
+				isOnStageEdge = EdgeType.BOTTOM;
+			}
+			if (position.y + height > Config.SCREEN_HEIGHT) {
 				position.y = Config.SCREEN_HEIGHT - height;
-		}
-		else{
-			if(position .x < 0 || position .x > Config.SCREEN_WIDTH || position.y < 0 || position.y > Config.SCREEN_HEIGHT)
+				isOnStageEdge = EdgeType.TOP;
+			}
+		} else {
+			if (position.x < 0 || position.x > Config.SCREEN_WIDTH
+					|| position.y < 0 || position.y > Config.SCREEN_HEIGHT)
 				isOutofStage = true;
 		}
-		//update the bounds of object, and the "+10f" is to relax the edge
+		// update the bounds of object, and the "+10f" is to relax the edge
 		bounds.x = position.x;
 		bounds.y = position.y;
-		
+
 	}
+
 	public DyObjectState getState() {
 		return state;
 	}
@@ -74,11 +91,15 @@ public abstract class DynamicObject extends GameObject {
 	public float getStateTime() {
 		return stateTime;
 	}
-	protected boolean isObjectCanOut(){
-		//judge the object whether can out of the edge
+
+	protected boolean isObjectCanOut() {
+		// judge the object whether can out of the edge
 		return false;
 	}
+
 	protected abstract float getWidth();
+
 	protected abstract float getHeight();
+
 	protected abstract float getVelocity();
 }

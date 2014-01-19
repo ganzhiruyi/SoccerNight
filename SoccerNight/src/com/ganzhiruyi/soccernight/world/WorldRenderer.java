@@ -11,6 +11,8 @@ import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.utils.Animation;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.zombie.Knight;
+import com.ganzhiruyi.soccernight.zombie.Tracker;
 import com.ganzhiruyi.soccernight.zombie.Zombie;
 
 public class WorldRenderer {
@@ -99,21 +101,33 @@ public class WorldRenderer {
 			float y = z.position.y;
 			switch (z.getState()) {
 			case IDLE:
-				region = z.isRight ? Assets.aniZombieIdleR
-						: Assets.aniZombieIdleL;
+				if (z instanceof Tracker) {
+					region = z.isRight ? Assets.aniTrackerIdleR
+							: Assets.aniTrackerIdleL;
+				} else {
+					region = z.isRight ? Assets.aniKnightIdleR
+							.getKeyFrame(stateTime) : Assets.aniKnightIdleL
+							.getKeyFrame(stateTime);
+				}
 				batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 						Zombie.ZOMBIE_HEIGHT);
 				break;
 			case MOVING:
 				float vx = z.velocity.x;
 				if (vx < 0) {
-					region = Assets.aniZombieL.getKeyFrame(stateTime,
-							Animation.ANIMATION_LOOPING);
+					if (z instanceof Tracker) {
+						region = Assets.aniTrackerL.getKeyFrame(stateTime);
+					} else {
+						region = Assets.aniKnightL.getKeyFrame(stateTime);
+					}
 					batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 							Zombie.ZOMBIE_HEIGHT);
 				} else if (vx > 0) {
-					region = Assets.aniZombieR.getKeyFrame(stateTime,
-							Animation.ANIMATION_LOOPING);
+					if (z instanceof Tracker)
+						region = Assets.aniTrackerR.getKeyFrame(stateTime);
+					else {
+						region = Assets.aniKnightR.getKeyFrame(stateTime);
+					}
 					batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 							Zombie.ZOMBIE_HEIGHT);
 				}

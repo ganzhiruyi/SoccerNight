@@ -24,4 +24,7 @@ public class Animation {
 		}
 		return keyFrames[frameNumber];
 	}
+	public TextureRegion getKeyFrame(float stateTime){
+		return getKeyFrame(stateTime, ANIMATION_LOOPING);
+	}
 }

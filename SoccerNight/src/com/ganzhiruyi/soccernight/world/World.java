@@ -10,6 +10,8 @@ import com.ganzhiruyi.soccernight.soccer.LineSoccer;
 import com.ganzhiruyi.soccernight.soccer.PaddySoccer;
 import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.zombie.Knight;
+import com.ganzhiruyi.soccernight.zombie.Tracker;
 import com.ganzhiruyi.soccernight.zombie.Zombie;
 
 /**
@@ -60,11 +62,11 @@ public class World {
 	private void initZombies() {
 		for (int i = 0; i < 2; i++) {
 			int edge = rand.nextInt(4);
-			addZombie(edge);
+			addZombie(0, edge);
 		}
 	}
 
-	private void addZombie(int edge) {
+	private void addZombie(int type, int edge) {
 		if (zombies.size() >= LIMIT_NUM_ZOMBIE
 				|| zombieCount >= LEVEL_NUM_ZOMBIE)
 			return;
@@ -81,7 +83,10 @@ public class World {
 			x = rand.nextInt((int) Config.SCREEN_WIDTH);
 			y = Config.SCREEN_HEIGHT;
 		}
-		zombies.add(new Zombie(x, y));
+		if (type == 0)
+			zombies.add(new Tracker(x, y));
+		else if (type == 1)
+			zombies.add(new Knight(x, y));
 	}
 
 	private void initSoccers() {
@@ -119,6 +124,7 @@ public class World {
 			return;
 		updateBob(deltaTime, accelX, accelY);
 		updateZombies(deltaTime);
+		addNewObject();
 		checkCollision(deltaTime);
 	}
 
@@ -138,17 +144,31 @@ public class World {
 			Zombie z = zombies.get(i);
 			float x = bob.position.x > z.position.x ? 1 : -1;
 			float y = bob.position.y > z.position.y ? 1 : -1;
-			if (i == accelZombie) {
-				x += x > 0 ? 1 : -1;
-				y += y > 0 ? 1 : -1;
+			if (z instanceof Tracker) {
+				if (i == accelZombie) {
+					x += x > 0 ? 1 : -1;
+					y += y > 0 ? 1 : -1;
+				}
+				z.update(deltaTime, x, y);
+			} else if (z instanceof Knight) {
+				if (Math.abs(bob.position.x - z.position.x) < 0.1)
+					y = 2;
+				else
+					y = (bob.position.y - z.position.y)
+							/ (bob.position.x - z.position.x) * x;
+				z.update(deltaTime, x, y);
 			}
-			z.update(deltaTime, x, y);
 		}
+	}
+
+	private void addNewObject() {
 		int nextObject = rand.nextInt() % 50;
 		if (nextObject <= 1)
 			addSoccer(nextObject);
-		else if(nextObject == 2)
-			addZombie(rand.nextInt(4));
+		else if (nextObject == 2)
+			addZombie(0, rand.nextInt(4));
+		else if (nextObject == 3)
+			addZombie(1, rand.nextInt(4));
 	}
 
 	private void checkCollision(float deltaTime) {

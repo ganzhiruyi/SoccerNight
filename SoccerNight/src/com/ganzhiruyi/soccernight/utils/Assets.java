@@ -12,19 +12,17 @@ public class Assets {
 	public static TextureRegion backgroundRegion;
 	public static BitmapFont font;
 	
-	public static Animation aniBobL;
-	public static Animation aniBobR;
-	public static TextureRegion aniBobIdleL;
-	public static TextureRegion aniBobIdleR;
-	public static Animation aniZombieL;
-	public static Animation aniZombieR;
-	public static TextureRegion aniZombieIdleL;
-	public static TextureRegion aniZombieIdleR;
+	public static Animation aniBobL,aniBobR;
+	public static TextureRegion aniBobIdleL,aniBobIdleR;
+	public static Animation aniTrackerL,aniTrackerR;
+	public static TextureRegion aniTrackerIdleL,aniTrackerIdleR;
 	public static TextureRegion aniRedSocIdle;
 	public static Animation aniRedSoc;
 	public static TextureRegion aniBlueSocIdle;
 	public static Animation aniBlueSoc;
 	public static Texture level_1_bg;
+	
+	public static Animation aniKnightIdleL,aniKnightIdleR,aniKnightL,aniKnightR; 
 
 	public static void load() {
 		// load the source
@@ -41,11 +39,11 @@ public class Assets {
 		aniBobIdleL = BobLeftRegions[0];
 		aniBobIdleR = BobRightRegions[0];
 		
-		TextureRegion[][] zombieRegions = new TextureRegion(loadTexture("zombie.png")).split(97, 99);
-		aniZombieIdleL = zombieRegions[0][0];
-		aniZombieIdleR = zombieRegions[1][0];
-		aniZombieL = new Animation(0.1f, zombieRegions[0]);
-		aniZombieR = new Animation(0.1f, zombieRegions[1]);
+		TextureRegion[][] zombieRegions = new TextureRegion(loadTexture("tracker.png")).split(97, 99);
+		aniTrackerIdleL = zombieRegions[0][0];
+		aniTrackerIdleR = zombieRegions[1][0];
+		aniTrackerL = new Animation(0.1f, zombieRegions[0]);
+		aniTrackerR = new Animation(0.1f, zombieRegions[1]);
 		
 		TextureRegion[][] redSocRegions = new TextureRegion(loadTexture("red_soccer.png")).split(241, 241);
 		aniRedSocIdle = redSocRegions[0][0];
@@ -54,9 +52,18 @@ public class Assets {
 		TextureRegion[][] blueSocRegions = new TextureRegion(loadTexture("blue_soccer.png")).split(241, 241);
 		aniBlueSocIdle = blueSocRegions[0][0];
 		aniBlueSoc = new Animation(0.1f, blueSocRegions[0]);
+		
+		TextureRegion[][] knightRegions = new TextureRegion(loadTexture("knight.png")).split(166, 131);
+		TextureRegion[][] tmp = new TextureRegion(loadTexture("knight.png")).split(166, 131);
+		aniKnightR = new Animation(0.1f, knightRegions[0]);
+		aniKnightL = new Animation(0.1f, reversePicture(tmp[0]));
+		TextureRegion[][] knightIdleRegions = new TextureRegion(loadTexture("knight_idle.png")).split(162, 134);
+		tmp = new TextureRegion(loadTexture("knight_idle.png")).split(162, 134);
+		aniKnightIdleR =  new Animation(0.1f, knightIdleRegions[0]);
+		aniKnightIdleL = new Animation(0.1f, reversePicture(tmp[0]));
 	}
 
-	public static TextureRegion[] reversePicture(TextureRegion[] region){
+	private static TextureRegion[] reversePicture(TextureRegion[] region){
 		TextureRegion[] miror = region;
 		for(TextureRegion r : miror){
 			r.flip(true, false);

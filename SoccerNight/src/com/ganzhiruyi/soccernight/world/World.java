@@ -11,6 +11,7 @@ import com.ganzhiruyi.soccernight.soccer.PaddySoccer;
 import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.utils.Config;
 import com.ganzhiruyi.soccernight.zombie.Knight;
+import com.ganzhiruyi.soccernight.zombie.Princess;
 import com.ganzhiruyi.soccernight.zombie.Tracker;
 import com.ganzhiruyi.soccernight.zombie.Zombie;
 
@@ -40,6 +41,7 @@ public class World {
 	private List<Soccer> soccers;
 	private List<Zombie> zombies;
 	private Bob bob;
+	private Princess princess;
 	private Random rand;
 	private int state;
 	private int zombieCount = 0;
@@ -64,6 +66,7 @@ public class World {
 			int edge = rand.nextInt(4);
 			addZombie(0, edge);
 		}
+		addZombie(2, rand.nextInt(4));
 	}
 
 	private void addZombie(int type, int edge) {
@@ -87,6 +90,8 @@ public class World {
 			zombies.add(new Tracker(x, y));
 		else if (type == 1)
 			zombies.add(new Knight(x, y));
+		else if (type == 2)
+			zombies.add(new Princess(x, y));
 	}
 
 	private void initSoccers() {
@@ -134,7 +139,7 @@ public class World {
 
 	private void updateZombies(float deltaTime) {
 		if (zombies.size() == 0) {
-			if (zombieCount >= LEVEL_NUM_ZOMBIE) {
+			if (zombieCount >= LEVEL_NUM_ZOMBIE && princess.blood <= 0) {
 				state = WORLD_STATE_NEXT_LEVEL;
 			}
 			return;
@@ -156,6 +161,17 @@ public class World {
 				else
 					y = (bob.position.y - z.position.y)
 							/ (bob.position.x - z.position.x) * x;
+				z.update(deltaTime, x, y);
+			} else if (z instanceof Princess) {
+				int m = rand.nextInt(100);
+				if (m < 50)
+					((Princess) z).setMove(Princess.WALK);
+				else if (m < 51)
+					((Princess) z).setMove(Princess.HACK);
+				else if (m < 99)
+					((Princess) z).setMove(Princess.WALK);
+				else
+					((Princess) z).setMove(Princess.STAB);
 				z.update(deltaTime, x, y);
 			}
 		}
@@ -192,7 +208,13 @@ public class World {
 				for (int j = 0; j < zombies.size(); j++) {
 					Zombie z = zombies.get(j);
 					if (OverlapTester.overlapRectangles(s.bounds, z.bounds)) {
-						zombies.remove(j);
+						if (z instanceof Princess) {
+							((Princess) z).blood--;
+							if (((Princess) z).blood <= 0) {
+								((Princess) z).setMove(Princess.DEAD);
+							}
+						} else
+							zombies.remove(j);
 						score++;
 					}
 				}

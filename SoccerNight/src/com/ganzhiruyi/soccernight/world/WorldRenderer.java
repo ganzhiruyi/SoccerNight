@@ -12,6 +12,7 @@ import com.ganzhiruyi.soccernight.utils.Animation;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
 import com.ganzhiruyi.soccernight.zombie.Knight;
+import com.ganzhiruyi.soccernight.zombie.Princess;
 import com.ganzhiruyi.soccernight.zombie.Tracker;
 import com.ganzhiruyi.soccernight.zombie.Zombie;
 
@@ -102,12 +103,11 @@ public class WorldRenderer {
 			switch (z.getState()) {
 			case IDLE:
 				if (z instanceof Tracker) {
-					region = z.isRight ? Assets.aniTrackerIdleR
-							: Assets.aniTrackerIdleL;
+					region = z.isRight ? Assets.aniTracker.idleR
+							: Assets.aniTracker.idleL;
 				} else {
-					region = z.isRight ? Assets.aniKnightIdleR
-							.getKeyFrame(stateTime) : Assets.aniKnightIdleL
-							.getKeyFrame(stateTime);
+					region = z.isRight ? Assets.aniKnight.idleR
+							: Assets.aniKnight.idleL;
 				}
 				batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 						Zombie.ZOMBIE_HEIGHT);
@@ -116,17 +116,38 @@ public class WorldRenderer {
 				float vx = z.velocity.x;
 				if (vx < 0) {
 					if (z instanceof Tracker) {
-						region = Assets.aniTrackerL.getKeyFrame(stateTime);
+						region = Assets.aniTracker.aniL.getKeyFrame(stateTime);
+					} else if (z instanceof Knight) {
+						region = Assets.aniKnight.aniL.getKeyFrame(stateTime);
 					} else {
-						region = Assets.aniKnightL.getKeyFrame(stateTime);
+						int move = ((Princess) z).getMove();
+						if (move == Princess.HACK)
+							region = Assets.aniPriHackL.getKeyFrame(stateTime);
+						else if (move == Princess.STAB)
+							region = Assets.aniPriStabL.getKeyFrame(stateTime);
+						else if (move == Princess.WALK)
+							region = Assets.aniPriWalkL.getKeyFrame(stateTime);
+						else
+							region = Assets.aniPriDeadL.getKeyFrame(stateTime);
+
 					}
 					batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 							Zombie.ZOMBIE_HEIGHT);
 				} else if (vx > 0) {
 					if (z instanceof Tracker)
-						region = Assets.aniTrackerR.getKeyFrame(stateTime);
-					else {
-						region = Assets.aniKnightR.getKeyFrame(stateTime);
+						region = Assets.aniTracker.aniR.getKeyFrame(stateTime);
+					else if (z instanceof Knight) {
+						region = Assets.aniKnight.aniR.getKeyFrame(stateTime);
+					} else {
+						int move = ((Princess) z).getMove();
+						if (move == Princess.HACK)
+							region = Assets.aniPriHackR.getKeyFrame(stateTime);
+						else if (move == Princess.STAB)
+							region = Assets.aniPriStabR.getKeyFrame(stateTime);
+						else if (move == Princess.WALK)
+							region = Assets.aniPriWalkR.getKeyFrame(stateTime);
+						else
+							region = Assets.aniPriDeadR.getKeyFrame(stateTime);
 					}
 					batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 							Zombie.ZOMBIE_HEIGHT);
@@ -135,7 +156,6 @@ public class WorldRenderer {
 			default:
 				break;
 			}
-
 		}
 	}
 

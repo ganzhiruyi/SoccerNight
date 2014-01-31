@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
-import com.ganzhiruyi.soccernight.utils.Animation;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
 
@@ -60,7 +59,7 @@ public class MainScreen implements Screen {
 		Assets.font.drawMultiLine(batch, STR_START, Config.SCREEN_WIDTH/2, Config.SCREEN_HEIGHT/2, 20, HAlignment.CENTER);
 		Assets.font.drawMultiLine(batch, STR_QUIT, Config.SCREEN_WIDTH/2, Config.SCREEN_HEIGHT/3, 20, HAlignment.CENTER);
 		
-		TextureRegion region = Assets.aniKnightR.getKeyFrame(stateTime);
+		TextureRegion region = Assets.aniPriWalkL.getKeyFrame(stateTime);
 		batch.draw(region, Config.SCREEN_WIDTH/2, Config.SCREEN_HEIGHT/4);
 		batch.end();
 		stateTime += delta;

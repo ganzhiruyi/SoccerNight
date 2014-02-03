@@ -49,6 +49,8 @@ public class RoundSoccer extends Soccer {
 			center.y = position.y;
 		}
 		state = DyObjectState.MOVING;
+		bounds.width *= 2;
+		bounds.height *= 2;
 		stateTime += deltaTime;
 	}
 

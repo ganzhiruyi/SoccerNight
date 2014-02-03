@@ -134,7 +134,7 @@ public class World {
 	}
 
 	public void update(float deltaTime, float accelX, float accelY) {
-		if (state == WORLD_STATE_GAME_OVER)
+		if (state == WORLD_STATE_GAME_OVER || state == WORLD_STATE_NEXT_LEVEL)
 			return;
 		updateBob(deltaTime, accelX, accelY);
 		updateZombies(deltaTime);
@@ -170,7 +170,10 @@ public class World {
 				else
 					y = (bob.position.y - z.position.y)
 							/ (bob.position.x - z.position.x) * x;
-				y = Math.min(y, 1.5f);
+				if(y > 1.5f)
+					y = 1.5f;
+				else if(y < -1.5f)
+					y = -1.5f;
 				z.update(deltaTime, x, y);
 			} else if (z instanceof Princess) {
 				z.update(deltaTime, x, y);
@@ -227,10 +230,9 @@ public class World {
 	}
 
 	private void addNewObject() {
-		if(!isPrincessShow && LEVEL_NUM_ZOMBIE - zombieCount == 2){
+		if(!isPrincessShow){
 			addZombie(2, rand.nextInt(4));
 			isPrincessShow = true;
-			return;
 		}
 		int nextObject = rand.nextInt() % 50;
 		if (nextObject <= 2)

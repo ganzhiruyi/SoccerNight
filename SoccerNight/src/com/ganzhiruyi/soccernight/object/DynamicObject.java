@@ -83,7 +83,6 @@ public abstract class DynamicObject extends GameObject {
 		bounds.y = position.y;
 
 	}
-
 	public DyObjectState getState() {
 		return state;
 	}

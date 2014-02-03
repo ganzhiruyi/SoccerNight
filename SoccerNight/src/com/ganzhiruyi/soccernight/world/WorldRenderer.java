@@ -5,8 +5,13 @@ import java.util.List;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.ganzhiruyi.soccernight.magic.Fire;
+import com.ganzhiruyi.soccernight.magic.Hurricane;
+import com.ganzhiruyi.soccernight.magic.Magic;
 import com.ganzhiruyi.soccernight.object.Bob;
 import com.ganzhiruyi.soccernight.soccer.LineSoccer;
+import com.ganzhiruyi.soccernight.soccer.PaddySoccer;
+import com.ganzhiruyi.soccernight.soccer.RoundSoccer;
 import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.utils.Animation;
 import com.ganzhiruyi.soccernight.utils.Assets;
@@ -60,6 +65,7 @@ public class WorldRenderer {
 		renderBob();
 		renderSoccers();
 		renderZombies();
+		renderMagic();
 		batch.end();
 	}
 
@@ -105,9 +111,23 @@ public class WorldRenderer {
 				if (z instanceof Tracker) {
 					region = z.isRight ? Assets.aniTracker.idleR
 							: Assets.aniTracker.idleL;
-				} else {
+				} else if (z instanceof Knight) {
 					region = z.isRight ? Assets.aniKnight.idleR
 							: Assets.aniKnight.idleL;
+				} else {
+					int move = ((Princess) z).getMove();
+					if (move == Princess.HACK)
+						region = z.isRight ? Assets.aniPriHackR
+								.getKeyFrame(stateTime) : Assets.aniPriHackL
+								.getKeyFrame(stateTime);
+					else if (move == Princess.STAB)
+						region = z.isRight ? Assets.aniPriStabR
+								.getKeyFrame(stateTime) : Assets.aniPriStabL
+								.getKeyFrame(stateTime);
+					else
+						region = z.isRight ? Assets.aniPriDeadR
+								.getKeyFrame(stateTime) : Assets.aniPriDeadL
+								.getKeyFrame(stateTime);
 				}
 				batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 						Zombie.ZOMBIE_HEIGHT);
@@ -115,40 +135,22 @@ public class WorldRenderer {
 			case MOVING:
 				float vx = z.velocity.x;
 				if (vx < 0) {
-					if (z instanceof Tracker) {
+					if (z instanceof Tracker)
 						region = Assets.aniTracker.aniL.getKeyFrame(stateTime);
-					} else if (z instanceof Knight) {
+					else if (z instanceof Knight)
 						region = Assets.aniKnight.aniL.getKeyFrame(stateTime);
-					} else {
-						int move = ((Princess) z).getMove();
-						if (move == Princess.HACK)
-							region = Assets.aniPriHackL.getKeyFrame(stateTime);
-						else if (move == Princess.STAB)
-							region = Assets.aniPriStabL.getKeyFrame(stateTime);
-						else if (move == Princess.WALK)
-							region = Assets.aniPriWalkL.getKeyFrame(stateTime);
-						else
-							region = Assets.aniPriDeadL.getKeyFrame(stateTime);
+					else
+						region = Assets.aniPriWalkL.getKeyFrame(stateTime);
 
-					}
 					batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 							Zombie.ZOMBIE_HEIGHT);
 				} else if (vx > 0) {
 					if (z instanceof Tracker)
 						region = Assets.aniTracker.aniR.getKeyFrame(stateTime);
-					else if (z instanceof Knight) {
+					else if (z instanceof Knight)
 						region = Assets.aniKnight.aniR.getKeyFrame(stateTime);
-					} else {
-						int move = ((Princess) z).getMove();
-						if (move == Princess.HACK)
-							region = Assets.aniPriHackR.getKeyFrame(stateTime);
-						else if (move == Princess.STAB)
-							region = Assets.aniPriStabR.getKeyFrame(stateTime);
-						else if (move == Princess.WALK)
-							region = Assets.aniPriWalkR.getKeyFrame(stateTime);
-						else
-							region = Assets.aniPriDeadR.getKeyFrame(stateTime);
-					}
+					else
+						region = Assets.aniPriWalkR.getKeyFrame(stateTime);
 					batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
 							Zombie.ZOMBIE_HEIGHT);
 				}
@@ -164,24 +166,55 @@ public class WorldRenderer {
 		if (soccers == null)
 			return;
 		for (Soccer s : soccers) {
-			TextureRegion region;
+			TextureRegion region = null;
 			float stateTime = s.getStateTime();
 			float x = s.position.x;
 			float y = s.position.y;
 			switch (s.getState()) {
 			case IDLE:
-				region = s instanceof LineSoccer ? Assets.aniRedSocIdle
-						: Assets.aniBlueSocIdle;
+				if (s instanceof LineSoccer)
+					region = Assets.aniRedSocIdle;
+				else if (s instanceof PaddySoccer)
+					region = Assets.aniBlueSocIdle;
+				else if (s instanceof RoundSoccer)
+					region = Assets.aniRoundSocIdle;
 				batch.draw(region, x, y, Soccer.SOCCER_WIDTH,
 						Soccer.SOCCER_HEIGHT);
 				break;
 			case MOVING:
-				region = s instanceof LineSoccer ? Assets.aniRedSoc
-						.getKeyFrame(stateTime, Animation.ANIMATION_LOOPING)
-						: Assets.aniBlueSoc.getKeyFrame(stateTime,
-								Animation.ANIMATION_LOOPING);
+				if (s instanceof LineSoccer)
+					region = Assets.aniRedSoc.getKeyFrame(stateTime);
+				else if (s instanceof PaddySoccer)
+					region = Assets.aniBlueSoc.getKeyFrame(stateTime);
+				else if (s instanceof RoundSoccer)
+					region = Assets.aniRoundSoc.getKeyFrame(stateTime);
 				batch.draw(region, x, y, Soccer.SOCCER_WIDTH,
 						Soccer.SOCCER_HEIGHT);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	private void renderMagic() {
+		List<Magic> magics = world.getMagics();
+		if (magics == null)
+			return;
+		for (Magic magic : magics) {
+			TextureRegion region = null;
+			float stateTime = magic.getStateTime();
+			float x = magic.position.x;
+			float y = magic.position.y;
+			switch (magic.getState()) {
+			case IDLE:
+				break;
+			case MOVING:
+				if (magic instanceof Hurricane)
+					region = Assets.aniHurricane.getKeyFrame(stateTime);
+				else if (magic instanceof Fire)
+					region = Assets.aniFire.getKeyFrame(stateTime);
+				batch.draw(region, x, y, Magic.WIDTH, Magic.HEIGHT);
 				break;
 			default:
 				break;

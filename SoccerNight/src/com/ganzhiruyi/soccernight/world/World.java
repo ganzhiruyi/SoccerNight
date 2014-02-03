@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.badlogic.gdx.math.Vector2;
+import com.ganzhiruyi.soccernight.magic.Fire;
+import com.ganzhiruyi.soccernight.magic.Hurricane;
+import com.ganzhiruyi.soccernight.magic.Magic;
 import com.ganzhiruyi.soccernight.object.Bob;
 import com.ganzhiruyi.soccernight.object.DynamicObject.DyObjectState;
 import com.ganzhiruyi.soccernight.soccer.LineSoccer;
 import com.ganzhiruyi.soccernight.soccer.PaddySoccer;
+import com.ganzhiruyi.soccernight.soccer.RoundSoccer;
 import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.utils.Config;
 import com.ganzhiruyi.soccernight.zombie.Knight;
@@ -40,12 +45,13 @@ public class World {
 	WorldListener listener;
 	private List<Soccer> soccers;
 	private List<Zombie> zombies;
+	private List<Magic> magics;
 	private Bob bob;
-	private Princess princess;
 	private Random rand;
 	private int state;
 	private int zombieCount = 0;
 	private int score = 0;
+	private boolean isPrincessShow;
 
 	public World(WorldListener listener) {
 		this.listener = listener;
@@ -57,8 +63,10 @@ public class World {
 		bob = new Bob(Config.SCREEN_WIDTH / 2, Config.SCREEN_HEIGHT / 2);
 		soccers = new ArrayList<Soccer>();
 		zombies = new ArrayList<Zombie>();
+		magics = new ArrayList<Magic>();
 		rand = new Random();
 		state = WORLD_STATE_RUNNING;
+		isPrincessShow = false;
 	}
 
 	private void initZombies() {
@@ -66,7 +74,6 @@ public class World {
 			int edge = rand.nextInt(4);
 			addZombie(0, edge);
 		}
-		addZombie(2, rand.nextInt(4));
 	}
 
 	private void addZombie(int type, int edge) {
@@ -96,7 +103,7 @@ public class World {
 
 	private void initSoccers() {
 		for (int i = 0; i < 4; i++) {
-			addSoccer(i % 2);
+			addSoccer(i % 3);
 		}
 	}
 
@@ -114,6 +121,8 @@ public class World {
 			soccers.add(new LineSoccer(x, y));
 		else if (type == 1)
 			soccers.add(new PaddySoccer(x, y));
+		else if(type == 2)
+			soccers.add(new RoundSoccer(x, y));
 	}
 
 	private void generateLevel() {
@@ -129,6 +138,7 @@ public class World {
 			return;
 		updateBob(deltaTime, accelX, accelY);
 		updateZombies(deltaTime);
+		updateMagic(deltaTime);
 		addNewObject();
 		checkCollision(deltaTime);
 	}
@@ -139,9 +149,8 @@ public class World {
 
 	private void updateZombies(float deltaTime) {
 		if (zombies.size() == 0) {
-			if (zombieCount >= LEVEL_NUM_ZOMBIE && princess.blood <= 0) {
+			if (zombieCount >= LEVEL_NUM_ZOMBIE)
 				state = WORLD_STATE_NEXT_LEVEL;
-			}
 			return;
 		}
 		int accelZombie = rand.nextInt(zombies.size());
@@ -157,44 +166,98 @@ public class World {
 				z.update(deltaTime, x, y);
 			} else if (z instanceof Knight) {
 				if (Math.abs(bob.position.x - z.position.x) < 0.1)
-					y = 2;
+					y = 1.5f;
 				else
 					y = (bob.position.y - z.position.y)
 							/ (bob.position.x - z.position.x) * x;
+				y = Math.min(y, 1.5f);
 				z.update(deltaTime, x, y);
 			} else if (z instanceof Princess) {
-				int m = rand.nextInt(100);
-				if (m < 50)
-					((Princess) z).setMove(Princess.WALK);
-				else if (m < 51)
-					((Princess) z).setMove(Princess.HACK);
-				else if (m < 99)
-					((Princess) z).setMove(Princess.WALK);
-				else
-					((Princess) z).setMove(Princess.STAB);
 				z.update(deltaTime, x, y);
+				Vector2 vec = new Vector2(0, 0);
+				vec.x = z.isRight ? Magic.VELOCITY : -Magic.VELOCITY;
+				int move = ((Princess) z).getMove(); 
+				if (move == Princess.STAB) {
+					if(((Princess) z).getHurricaneNum() <= 2){
+						addMagic(0, z.position.x, z.position.y, deltaTime, vec);
+						((Princess) z).addHurricaneNum(1);
+					}
+				}
+				else if(move == Princess.HACK){
+					if(((Princess) z).getFireNum() == 0){
+						addMagic(1, z.position.x, z.position.y, deltaTime, vec);
+						vec.y += 2;
+						addMagic(1, z.position.x, z.position.y, deltaTime, vec);
+						vec.y = -vec.y;
+						addMagic(1, z.position.x, z.position.y, deltaTime, vec);
+						((Princess) z).addFireNum(3);
+					}
+				}
+				else if(move == Princess.WALK){
+					((Princess) z).addHurricaneNum(-2);
+					((Princess) z).addFireNum(-3);
+				}
 			}
 		}
 	}
 
+	private void updateMagic(float deltaTime) {
+		for (int i = 0; i < magics.size(); i++) {
+			Magic magic = magics.get(i);
+			if (magic.getState() == DyObjectState.DEAD)
+				magics.remove(i);
+			else if (magic.getState() == DyObjectState.MOVING)
+				magic.update(deltaTime, magic.velocity.x, magic.velocity.y);
+		}
+	}
+
+	private void addMagic(int type, float x, float y, float deltaTime,
+			Vector2 vec) {
+		Magic magic;
+		if(type == 0){
+			magic = new Hurricane(x, y);
+			magic.update(deltaTime, vec.x, vec.y);
+			magics.add(magic);
+		}
+		else if(type == 1){
+			magic = new Fire(x, y);
+			magic.update(deltaTime, vec.x, vec.y);
+			magics.add(magic);
+		}
+	}
+
 	private void addNewObject() {
+		if(!isPrincessShow && LEVEL_NUM_ZOMBIE - zombieCount == 2){
+			addZombie(2, rand.nextInt(4));
+			isPrincessShow = true;
+			return;
+		}
 		int nextObject = rand.nextInt() % 50;
-		if (nextObject <= 1)
+		if (nextObject <= 2)
 			addSoccer(nextObject);
-		else if (nextObject == 2)
+		else if (nextObject == 48)
 			addZombie(0, rand.nextInt(4));
-		else if (nextObject == 3)
+		else if (nextObject == 49)
 			addZombie(1, rand.nextInt(4));
 	}
 
 	private void checkCollision(float deltaTime) {
 		collisionZombie();
 		collisionSoccer(deltaTime);
+		collisionMagic();
 	}
 
 	private void collisionZombie() {
 		for (Zombie z : zombies) {
 			if (OverlapTester.overlapRectangles(bob.bounds, z.bounds)) {
+				state = WORLD_STATE_GAME_OVER;
+				break;
+			}
+		}
+	}
+	private void collisionMagic(){
+		for(Magic m : magics){
+			if(OverlapTester.overlapRectangles(bob.bounds, m.bounds)){
 				state = WORLD_STATE_GAME_OVER;
 				break;
 			}
@@ -207,16 +270,23 @@ public class World {
 			if (s.getState() == DyObjectState.MOVING) {
 				for (int j = 0; j < zombies.size(); j++) {
 					Zombie z = zombies.get(j);
+					if (z instanceof Princess
+							&& ((Princess) z).getState() == DyObjectState.DEAD) {
+						zombies.remove(j);
+						continue;
+					}
 					if (OverlapTester.overlapRectangles(s.bounds, z.bounds)) {
-						if (z instanceof Princess) {
+						if (z instanceof Princess)
 							((Princess) z).blood--;
-							if (((Princess) z).blood <= 0) {
-								((Princess) z).setMove(Princess.DEAD);
-							}
-						} else
+						else
 							zombies.remove(j);
 						score++;
 					}
+				}
+				for(int k = 0;k < magics.size();k++){
+					Magic m = magics.get(k);
+					if(OverlapTester.overlapRectangles(s.bounds, m.bounds))
+						magics.remove(k);
 				}
 				s.roll(deltaTime);
 			} else if (s.getState() == DyObjectState.DEAD) {
@@ -224,6 +294,12 @@ public class World {
 			} else if (OverlapTester.overlapRectangles(bob.bounds, s.bounds)) {
 				float accelX = bob.velocity.x;
 				float accelY = bob.velocity.y;
+				if(s instanceof RoundSoccer){
+					if(Math.abs(accelX) > Math.abs(accelY))
+						accelY = 0; 
+					else if(Math.abs(accelX) < Math.abs(accelY))
+						accelX = 0;
+				}
 				s.update(deltaTime, accelX, accelY);
 			}
 		}
@@ -239,6 +315,10 @@ public class World {
 
 	public List<Soccer> getSoccers() {
 		return soccers;
+	}
+
+	public List<Magic> getMagics() {
+		return magics;
 	}
 
 	public int getState() {

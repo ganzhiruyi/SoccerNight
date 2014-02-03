@@ -1,16 +1,10 @@
 package com.ganzhiruyi.soccernight.object;
 
-import com.ganzhiruyi.soccernight.utils.Assets;
-
 public class Bob extends DynamicObject {
-	public static float BOB_WIDTH = 51f;
-	public static float BOB_HEIGHT = 84f;
-	public static final float BOB_VELOCITY = 2f;
+	public static float BOB_WIDTH = 27.2f;
+	public static float BOB_HEIGHT = 40f;
+	public static final float BOB_VELOCITY = 1.5f;
 	
-	static{
-		BOB_WIDTH = Assets.aniBobIdleL.getRegionWidth();
-		BOB_HEIGHT = Assets.aniBobIdleL.getRegionHeight();
-	}
 	public Bob(float x, float y) {
 		super(x, y, BOB_WIDTH, BOB_HEIGHT);
 	}

@@ -4,8 +4,8 @@ import com.ganzhiruyi.soccernight.object.DynamicObject;
 
 public class Zombie extends DynamicObject {
 	private static final float ZOMBIE_VELOCITY = 0.5f; 
-	public static float ZOMBIE_WIDTH = 27.2f;
-	public static float ZOMBIE_HEIGHT = 40f;
+	public static float ZOMBIE_WIDTH = 20f;
+	public static float ZOMBIE_HEIGHT = 30f;
 	
 	public Zombie(float x, float y) {
 		super(x, y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);

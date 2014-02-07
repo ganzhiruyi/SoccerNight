@@ -22,6 +22,8 @@ public class Princess extends Zombie {
 		move = STAB;
 		preMoveTime = hurricaneNum = fireNum = 0;
 		rand = new Random();
+		bounds.width = 34f;
+		bounds.height = 50f; 
 	}
 
 	@Override

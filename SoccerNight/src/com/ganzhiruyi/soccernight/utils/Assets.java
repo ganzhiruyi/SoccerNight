@@ -14,13 +14,15 @@ public class Assets {
 
 	public static Animation aniBobL, aniBobR;
 	public static TextureRegion aniBobIdleL, aniBobIdleR;
-	public static TextureRegion aniRedSocIdle,aniBlueSocIdle,aniRoundSocIdle;
-	public static Animation aniRedSoc,aniBlueSoc,aniRoundSoc;
+	public static TextureRegion lineSocIdle, paddySocIdle, roundSocIdle,
+			waveSocIdle, bombSocIdle;
+	public static Animation aniRedSoc, aniBlueSoc, aniRoundSoc, aniWaveSoc,
+			aniBombSoc;
 	public static Animation aniPriWalkL, aniPriWalkR, aniPriDeadL, aniPriDeadR,
 			aniPriStabL, aniPriStabR, aniPriHackL, aniPriHackR;
 	public static Texture level_1_bg;
 	public static MoveAnimation aniKnight, aniTracker;
-	public static Animation aniHurricane,aniFire;
+	public static Animation aniHurricane, aniFire;
 
 	public static void load() {
 		// load the source
@@ -37,18 +39,28 @@ public class Assets {
 	private static void loadSoccer() {
 		TextureRegion[][] regions = new TextureRegion(
 				loadTexture("red_soccer.png")).split(241, 241);
-		aniRedSocIdle = regions[0][0];
+		lineSocIdle = regions[0][0];
 		aniRedSoc = new Animation(0.2f, regions[0]);
 
-		regions = new TextureRegion(
-				loadTexture("blue_soccer.png")).split(241, 241);
-		aniBlueSocIdle = regions[0][0];
+		regions = new TextureRegion(loadTexture("blue_soccer.png")).split(241,
+				241);
+		paddySocIdle = regions[0][0];
 		aniBlueSoc = new Animation(0.2f, regions[0]);
-		
-		regions = new TextureRegion(
-				loadTexture("round_soccer.png")).split(241, 241);
-		aniRoundSocIdle = regions[0][0];
+
+		regions = new TextureRegion(loadTexture("round_soccer.png")).split(241,
+				241);
+		roundSocIdle = regions[0][0];
 		aniRoundSoc = new Animation(0.2f, regions[0]);
+
+		regions = new TextureRegion(loadTexture("wave_soccer.png")).split(241,
+				241);
+		waveSocIdle = regions[0][0];
+		aniWaveSoc = new Animation(0.2f, regions[0]);
+		
+		regions = new TextureRegion(loadTexture("bomb_soccer.png")).split(241,
+				241);
+		bombSocIdle = regions[0][0];
+		aniBombSoc = new Animation(0.2f, regions[0]);
 	}
 
 	private static void loadRole() {
@@ -68,8 +80,8 @@ public class Assets {
 				loadTexture("dead.png")).split(120, 120);
 		TextureRegion[][] tmp = new TextureRegion(loadTexture("dead.png"))
 				.split(120, 120);
-		aniPriDeadR = new Animation(0.8f, priRegions[0]);
-		aniPriDeadL = new Animation(0.8f, reversePicture(tmp[0]));
+		aniPriDeadR = new Animation(1f, priRegions[0]);
+		aniPriDeadL = new Animation(1f, reversePicture(tmp[0]));
 		// stab
 		priRegions = new TextureRegion(loadTexture("stab.png")).split(120, 120);
 		tmp = new TextureRegion(loadTexture("stab.png")).split(120, 120);

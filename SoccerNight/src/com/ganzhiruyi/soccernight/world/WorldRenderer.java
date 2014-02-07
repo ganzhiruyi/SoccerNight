@@ -9,11 +9,12 @@ import com.ganzhiruyi.soccernight.magic.Fire;
 import com.ganzhiruyi.soccernight.magic.Hurricane;
 import com.ganzhiruyi.soccernight.magic.Magic;
 import com.ganzhiruyi.soccernight.object.Bob;
+import com.ganzhiruyi.soccernight.soccer.BombSoccer;
 import com.ganzhiruyi.soccernight.soccer.LineSoccer;
 import com.ganzhiruyi.soccernight.soccer.PaddySoccer;
 import com.ganzhiruyi.soccernight.soccer.RoundSoccer;
 import com.ganzhiruyi.soccernight.soccer.Soccer;
-import com.ganzhiruyi.soccernight.utils.Animation;
+import com.ganzhiruyi.soccernight.soccer.WaveSoccer;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
 import com.ganzhiruyi.soccernight.zombie.Knight;
@@ -36,13 +37,6 @@ public class WorldRenderer {
 	}
 
 	public void render() {
-		/*
-		 * if(world.getBob().position.x != cam.position.x ||
-		 * world.getBob().position.y != cam.position.y){ //make sure the camera
-		 * is always on bob, he is the star, haha cam.position.x =
-		 * world.getBob().position.x; cam.position.y =
-		 * world.getBob().position.y; }
-		 */
 		if (world.getState() == World.WORLD_STATE_GAME_OVER)
 			return;
 		cam.update();
@@ -83,12 +77,10 @@ public class WorldRenderer {
 		case MOVING:
 			float vx = bob.velocity.x;
 			if (vx < 0) {
-				region = Assets.aniBobL.getKeyFrame(stateTime,
-						Animation.ANIMATION_LOOPING);
+				region = Assets.aniBobL.getKeyFrame(stateTime);
 				batch.draw(region, x, y, Bob.BOB_WIDTH, Bob.BOB_HEIGHT);
 			} else if (vx > 0) {
-				region = Assets.aniBobR.getKeyFrame(stateTime,
-						Animation.ANIMATION_LOOPING);
+				region = Assets.aniBobR.getKeyFrame(stateTime);
 				batch.draw(region, x, y, Bob.BOB_WIDTH, Bob.BOB_HEIGHT);
 			}
 			break;
@@ -129,8 +121,8 @@ public class WorldRenderer {
 								.getKeyFrame(stateTime) : Assets.aniPriDeadL
 								.getKeyFrame(stateTime);
 				}
-				batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
-						Zombie.ZOMBIE_HEIGHT);
+
+				batch.draw(region, x, y, z.bounds.width, z.bounds.height);
 				break;
 			case MOVING:
 				float vx = z.velocity.x;
@@ -141,9 +133,7 @@ public class WorldRenderer {
 						region = Assets.aniKnight.aniL.getKeyFrame(stateTime);
 					else
 						region = Assets.aniPriWalkL.getKeyFrame(stateTime);
-
-					batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
-							Zombie.ZOMBIE_HEIGHT);
+					batch.draw(region, x, y, z.bounds.width, z.bounds.height);
 				} else if (vx > 0) {
 					if (z instanceof Tracker)
 						region = Assets.aniTracker.aniR.getKeyFrame(stateTime);
@@ -151,8 +141,7 @@ public class WorldRenderer {
 						region = Assets.aniKnight.aniR.getKeyFrame(stateTime);
 					else
 						region = Assets.aniPriWalkR.getKeyFrame(stateTime);
-					batch.draw(region, x, y, Zombie.ZOMBIE_WIDTH,
-							Zombie.ZOMBIE_HEIGHT);
+					batch.draw(region, x, y, z.bounds.width, z.bounds.height);
 				}
 				break;
 			default:
@@ -173,13 +162,16 @@ public class WorldRenderer {
 			switch (s.getState()) {
 			case IDLE:
 				if (s instanceof LineSoccer)
-					region = Assets.aniRedSocIdle;
+					region = Assets.lineSocIdle;
 				else if (s instanceof PaddySoccer)
-					region = Assets.aniBlueSocIdle;
+					region = Assets.paddySocIdle;
 				else if (s instanceof RoundSoccer)
-					region = Assets.aniRoundSocIdle;
-				batch.draw(region, x, y, Soccer.SOCCER_WIDTH,
-						Soccer.SOCCER_HEIGHT);
+					region = Assets.roundSocIdle;
+				else if (s instanceof WaveSoccer)
+					region = Assets.waveSocIdle;
+				else if (s instanceof BombSoccer)
+					region = Assets.bombSocIdle;
+				batch.draw(region, x, y, s.bounds.width, s.bounds.height);
 				break;
 			case MOVING:
 				if (s instanceof LineSoccer)
@@ -188,8 +180,11 @@ public class WorldRenderer {
 					region = Assets.aniBlueSoc.getKeyFrame(stateTime);
 				else if (s instanceof RoundSoccer)
 					region = Assets.aniRoundSoc.getKeyFrame(stateTime);
-				batch.draw(region, x, y, Soccer.SOCCER_WIDTH,
-						Soccer.SOCCER_HEIGHT);
+				else if (s instanceof WaveSoccer)
+					region = Assets.aniWaveSoc.getKeyFrame(stateTime);
+				else if (s instanceof BombSoccer)
+					region = Assets.aniBombSoc.getKeyFrame(stateTime);
+				batch.draw(region, x, y, s.bounds.width, s.bounds.height);
 				break;
 			default:
 				break;

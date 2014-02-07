@@ -10,10 +10,12 @@ import com.ganzhiruyi.soccernight.magic.Hurricane;
 import com.ganzhiruyi.soccernight.magic.Magic;
 import com.ganzhiruyi.soccernight.object.Bob;
 import com.ganzhiruyi.soccernight.object.DynamicObject.DyObjectState;
+import com.ganzhiruyi.soccernight.soccer.BombSoccer;
 import com.ganzhiruyi.soccernight.soccer.LineSoccer;
 import com.ganzhiruyi.soccernight.soccer.PaddySoccer;
 import com.ganzhiruyi.soccernight.soccer.RoundSoccer;
 import com.ganzhiruyi.soccernight.soccer.Soccer;
+import com.ganzhiruyi.soccernight.soccer.WaveSoccer;
 import com.ganzhiruyi.soccernight.utils.Config;
 import com.ganzhiruyi.soccernight.zombie.Knight;
 import com.ganzhiruyi.soccernight.zombie.Princess;
@@ -33,6 +35,7 @@ public class World {
 	public static final int LIMIT_NUM_ZOMBIE = 5;
 	public static final int LIMIT_NUM_SOCCER = 4;
 	public static final int LEVEL_NUM_ZOMBIE = 10;
+	public static final int SOCCER_TYPE_NUM = 5; 
 
 	public interface WorldListener {
 		public void hit();
@@ -102,8 +105,8 @@ public class World {
 	}
 
 	private void initSoccers() {
-		for (int i = 0; i < 4; i++) {
-			addSoccer(i % 3);
+		for (int i = 0; i < SOCCER_TYPE_NUM; i++) {
+			addSoccer(i % SOCCER_TYPE_NUM);
 		}
 	}
 
@@ -123,6 +126,10 @@ public class World {
 			soccers.add(new PaddySoccer(x, y));
 		else if(type == 2)
 			soccers.add(new RoundSoccer(x, y));
+		else if(type == 3)
+			soccers.add(new WaveSoccer(x,y));
+		else if(type == 4)
+			soccers.add(new BombSoccer(x, y));
 	}
 
 	private void generateLevel() {
@@ -235,7 +242,7 @@ public class World {
 			isPrincessShow = true;
 		}
 		int nextObject = rand.nextInt() % 50;
-		if (nextObject <= 2)
+		if (nextObject < SOCCER_TYPE_NUM)
 			addSoccer(nextObject);
 		else if (nextObject == 48)
 			addZombie(0, rand.nextInt(4));

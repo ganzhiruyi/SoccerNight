@@ -23,8 +23,8 @@ public class RoundSoccer extends Soccer {
 			return;
 		}
 		radian += pi / 16;
-		position.x = (float) (radius * Math.cos(radian) + center.x);
-		position.y = (float) (radius * Math.sin(radian) + center.y);
+		bounds.x = position.x = (float) (radius * Math.cos(radian) + center.x);
+		bounds.y = position.y = (float) (radius * Math.sin(radian) + center.y);
 		startTime += deltaTime;
 	}
 
@@ -49,8 +49,6 @@ public class RoundSoccer extends Soccer {
 			center.y = position.y;
 		}
 		state = DyObjectState.MOVING;
-		bounds.width *= 2;
-		bounds.height *= 2;
 		stateTime += deltaTime;
 	}
 

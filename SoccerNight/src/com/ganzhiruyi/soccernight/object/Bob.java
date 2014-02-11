@@ -12,19 +12,9 @@ public class Bob extends DynamicObject {
 	public void update(float deltaTime, float accelX, float accelY) {
 		super.update(deltaTime, accelX, accelY);
 	}
-	
-	@Override
-	protected float getWidth() {
-		return BOB_WIDTH;
-	}
 
 	@Override
-	protected float getHeight() {
-		return BOB_HEIGHT;
-	}
-
-	@Override
-	protected float getVelocity() {
+	public float getVelocity() {
 		return BOB_VELOCITY;
 	}
 	@Override

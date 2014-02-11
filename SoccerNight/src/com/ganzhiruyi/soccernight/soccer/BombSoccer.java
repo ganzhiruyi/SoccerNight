@@ -20,8 +20,8 @@ public class BombSoccer extends Soccer {
 	@Override
 	public void update(float deltaTime, float accelX, float accelY) {
 		super.update(deltaTime, accelX, accelY);
+		this.width = this.height = 40f;
 		bounds.width = bounds.height = 40f;
 		startTime = 0;
 	}
-	
 }

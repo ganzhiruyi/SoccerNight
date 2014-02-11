@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class Princess extends Zombie {
 	private static final float PRINCESS_VELOCITY = 1f;
+	private static final float WIDTH = 34f;
+	private static final float HEIGHT = 50f;
 	private static final float IDLE_LIMIT = 2;
 	public int blood;
 	public static int WALK = 0;
@@ -17,13 +19,11 @@ public class Princess extends Zombie {
 	private int fireNum;
 
 	public Princess(float x, float y) {
-		super(x, y);
+		super(x, y, WIDTH, HEIGHT);
 		blood = 20;
 		move = STAB;
 		preMoveTime = hurricaneNum = fireNum = 0;
 		rand = new Random();
-		bounds.width = 34f;
-		bounds.height = 50f; 
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class Princess extends Zombie {
 	}
 
 	@Override
-	protected float getVelocity() {
+	public float getVelocity() {
 		return PRINCESS_VELOCITY;
 	}
 }

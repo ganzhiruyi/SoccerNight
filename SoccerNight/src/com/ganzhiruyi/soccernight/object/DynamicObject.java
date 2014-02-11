@@ -13,9 +13,11 @@ public abstract class DynamicObject extends GameObject {
 	public enum DyObjectState {
 		IDLE, DEAD, MOVING;
 	}
-	public enum EdgeType{
+
+	public enum EdgeType {
 		NONE, BOTTOM, LEFT, TOP, RIGHT;
 	}
+
 	protected boolean isOutofStage;
 	protected EdgeType isOnStageEdge;
 
@@ -55,7 +57,6 @@ public abstract class DynamicObject extends GameObject {
 
 	protected void updatePosition() {
 		position.add(velocity.x * getVelocity(), velocity.y * getVelocity());
-		float width = getWidth(), height = getHeight();
 		if (!isObjectCanOut()) {
 			if (position.x < 0) {
 				position.x = 0;
@@ -79,10 +80,11 @@ public abstract class DynamicObject extends GameObject {
 				isOutofStage = true;
 		}
 		// update the bounds of object, and the "+10f" is to relax the edge
-		bounds.x = position.x;
-		bounds.y = position.y;
+		bounds.x = position.x + width / 8;
+		bounds.y = position.y + height / 8;
 
 	}
+
 	public DyObjectState getState() {
 		return state;
 	}
@@ -96,9 +98,5 @@ public abstract class DynamicObject extends GameObject {
 		return false;
 	}
 
-	protected abstract float getWidth();
-
-	protected abstract float getHeight();
-
-	protected abstract float getVelocity();
+	public abstract float getVelocity();
 }

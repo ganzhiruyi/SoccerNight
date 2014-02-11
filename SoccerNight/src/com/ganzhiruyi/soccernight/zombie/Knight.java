@@ -30,7 +30,7 @@ public class Knight extends Zombie {
 		}
 	}
 	@Override
-	protected float getVelocity() {
+	public float getVelocity() {
 		return KNIGHT_VELOCITY;
 	}
 }

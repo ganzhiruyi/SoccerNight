@@ -25,17 +25,7 @@ public abstract class Soccer extends DynamicObject {
 	}
 
 	@Override
-	protected float getWidth() {
-		return SOCCER_WIDTH;
-	}
-
-	@Override
-	protected float getHeight() {
-		return SOCCER_HEIGHT;
-	}
-
-	@Override
-	protected float getVelocity() {
+	public float getVelocity() {
 		return SOCCER_VELOCITY;
 	}
 

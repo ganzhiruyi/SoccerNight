@@ -37,8 +37,6 @@ public class WorldRenderer {
 	}
 
 	public void render() {
-		if (world.getState() == World.WORLD_STATE_GAME_OVER)
-			return;
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
 		renderBackground();
@@ -121,8 +119,7 @@ public class WorldRenderer {
 								.getKeyFrame(stateTime) : Assets.aniPriDeadL
 								.getKeyFrame(stateTime);
 				}
-
-				batch.draw(region, x, y, z.bounds.width, z.bounds.height);
+				batch.draw(region, x, y, z.width, z.height);
 				break;
 			case MOVING:
 				float vx = z.velocity.x;
@@ -133,7 +130,7 @@ public class WorldRenderer {
 						region = Assets.aniKnight.aniL.getKeyFrame(stateTime);
 					else
 						region = Assets.aniPriWalkL.getKeyFrame(stateTime);
-					batch.draw(region, x, y, z.bounds.width, z.bounds.height);
+					batch.draw(region, x, y, z.width, z.height);
 				} else if (vx > 0) {
 					if (z instanceof Tracker)
 						region = Assets.aniTracker.aniR.getKeyFrame(stateTime);
@@ -141,7 +138,7 @@ public class WorldRenderer {
 						region = Assets.aniKnight.aniR.getKeyFrame(stateTime);
 					else
 						region = Assets.aniPriWalkR.getKeyFrame(stateTime);
-					batch.draw(region, x, y, z.bounds.width, z.bounds.height);
+					batch.draw(region, x, y, z.width, z.height);
 				}
 				break;
 			default:
@@ -171,7 +168,7 @@ public class WorldRenderer {
 					region = Assets.waveSocIdle;
 				else if (s instanceof BombSoccer)
 					region = Assets.bombSocIdle;
-				batch.draw(region, x, y, s.bounds.width, s.bounds.height);
+				batch.draw(region, x, y, s.width, s.height);
 				break;
 			case MOVING:
 				if (s instanceof LineSoccer)
@@ -184,7 +181,7 @@ public class WorldRenderer {
 					region = Assets.aniWaveSoc.getKeyFrame(stateTime);
 				else if (s instanceof BombSoccer)
 					region = Assets.aniBombSoc.getKeyFrame(stateTime);
-				batch.draw(region, x, y, s.bounds.width, s.bounds.height);
+				batch.draw(region, x, y, s.width, s.height);
 				break;
 			default:
 				break;

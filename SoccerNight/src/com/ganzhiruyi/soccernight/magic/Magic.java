@@ -25,17 +25,7 @@ public class Magic extends DynamicObject {
 	}
 
 	@Override
-	protected float getWidth() {
-		return WIDTH;
-	}
-
-	@Override
-	protected float getHeight() {
-		return HEIGHT;
-	}
-
-	@Override
-	protected float getVelocity() {
+	public float getVelocity() {
 		return VELOCITY;
 	}
 	

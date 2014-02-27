@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.math.Vector3;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.utils.Settings;
 import com.ganzhiruyi.soccernight.world.World;
 import com.ganzhiruyi.soccernight.world.World.WorldListener;
 import com.ganzhiruyi.soccernight.world.WorldRenderer;
@@ -129,10 +130,12 @@ public class GameScreen implements Screen {
 		}
 		if (world.getState() == World.WORLD_STATE_GAME_OVER) {
 			state = GAME_OVER;
+			Settings.save(world.getScore());
 			return;
 		}
 		else if (world.getState() == World.WORLD_STATE_NEXT_LEVEL) {
 			state = GAME_LEVEL_END;
+			Settings.save(world.getScore());
 			return;
 		}
 		world.update(delta, accelX, accelY);
@@ -178,7 +181,6 @@ public class GameScreen implements Screen {
 		String text = "You win!\n Score: " + world.getScore();
 		Assets.font.drawMultiLine(batch, text, Config.SCREEN_WIDTH / 2,
 				Config.SCREEN_HEIGHT / 2, 20, HAlignment.CENTER);
-		
 	}
 
 	private void drawOver() {

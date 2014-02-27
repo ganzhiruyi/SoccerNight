@@ -1,76 +1,52 @@
 package com.ganzhiruyi.soccernight.utils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
 public class Settings {
 	public static final int HIGHSCORE_NUM = 5;
-	public static final String HIGHSCORE_RECORDE = ".scoccernight";
+	public static final String HIGHSCORE_RECORDE = "soccernight_highscore.txt";
 	public static List<Integer> highscores = new ArrayList<Integer>();
 	public static boolean soundEnable = true;
+	static {
+		Gdx.files.local(HIGHSCORE_RECORDE).write(false);
+	}
 
 	public static void load() {
 		// load the highscores
-		BufferedReader in = null;
-		try {
-			File file = new File(HIGHSCORE_RECORDE);
-			if(!file.exists()){
-				file.createNewFile();
-			}
-			in = new BufferedReader(new InputStreamReader(Gdx.files.internal(
-					HIGHSCORE_RECORDE).read()));
-			soundEnable = Boolean.parseBoolean(in.readLine());
-			int highscore;
-			String str = null;
-			while ((str = in.readLine()) != null) {
-				highscore = Integer.parseInt(str);
-				highscores.add(highscore);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		if (!Gdx.files.isLocalStorageAvailable())
+			return;
+		FileHandle file = Gdx.files.local(HIGHSCORE_RECORDE);
+		String[] tmp = file.readString().split(",");
+		if (tmp.length <= 0 || tmp[0].length() <= 0)
+			return;
+		for (int i = 0; i < tmp.length; i++)
+			highscores.add(Integer.parseInt(tmp[i]));
 	}
 
 	public static void save(int score) {
 		// save the highscores
-		BufferedWriter out = null;
-		try {
-			out = new BufferedWriter(new OutputStreamWriter(Gdx.files.internal(
-					HIGHSCORE_RECORDE).write(false)));
-			out.write(String.valueOf(soundEnable) + "\n");
-			for (int hScore : highscores) {
-				out.write(hScore + "\n");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		if (!Gdx.files.isLocalStorageAvailable())
+			return;
+		addScore(score);
+		FileHandle file = Gdx.files.local(HIGHSCORE_RECORDE);
+		String tmp = "";
+		for (int i = 0; i < highscores.size() - 1; i++) {
+			tmp = tmp + highscores.get(i) + ",";
 		}
+		if (highscores.size() > 0)
+			tmp = tmp + highscores.get(highscores.size() - 1) + "\n";
+		file.writeString(tmp, false);
 	}
 
 	public static void addScore(int score) {
+		if (highscores.size() <= 0) {
+			highscores.add(score);
+			return;
+		}
 		for (int i = 0; i < highscores.size(); i++) {
 			if (score > highscores.get(i)) {
 				highscores.add(i, score);

@@ -9,7 +9,7 @@ import com.badlogic.gdx.files.FileHandle;
 public class Settings {
 	public static final int HIGHSCORE_NUM = 5;
 	public static final String HIGHSCORE_RECORDE = "soccernight_highscore.txt";
-	public static List<Integer> highscores = new ArrayList<Integer>();
+	private static List<Integer> highscores = new ArrayList<Integer>();
 	public static boolean soundEnable = true;
 	static {
 		Gdx.files.local(HIGHSCORE_RECORDE).write(false);
@@ -34,11 +34,9 @@ public class Settings {
 		addScore(score);
 		FileHandle file = Gdx.files.local(HIGHSCORE_RECORDE);
 		String tmp = "";
-		for (int i = 0; i < highscores.size() - 1; i++) {
+		for (int i = 0; i < highscores.size(); i++) {
 			tmp = tmp + highscores.get(i) + ",";
 		}
-		if (highscores.size() > 0)
-			tmp = tmp + highscores.get(highscores.size() - 1) + "\n";
 		file.writeString(tmp, false);
 	}
 
@@ -55,5 +53,11 @@ public class Settings {
 		}
 		if (highscores.size() > HIGHSCORE_NUM)
 			highscores.remove(HIGHSCORE_NUM);
+	}
+	public static List<Integer> getScores(){
+		if(highscores != null)
+			highscores.clear();
+		load();
+		return highscores;
 	}
 }

@@ -5,12 +5,14 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class Assets {
 	public static Texture background;
 	public static Texture items;
 	public static TextureRegion backgroundRegion;
 	public static BitmapFont font;
+	public static Skin skin;
 
 	public static Animation aniBobL, aniBobR;
 	public static TextureRegion aniBobIdleL, aniBobIdleR;
@@ -34,6 +36,11 @@ public class Assets {
 		loadRole();
 		loadSoccer();
 		loadMagic();
+		loadSkin();
+	}
+
+	private static void loadSkin() {
+		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 	}
 
 	private static void loadSoccer() {

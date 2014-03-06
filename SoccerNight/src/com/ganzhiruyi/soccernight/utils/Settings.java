@@ -23,6 +23,7 @@ public class Settings {
 		String[] tmp = file.readString().split(",");
 		if (tmp.length <= 0 || tmp[0].length() <= 0)
 			return;
+		highscores.clear();
 		for (int i = 0; i < tmp.length; i++)
 			highscores.add(Integer.parseInt(tmp[i]));
 	}
@@ -55,9 +56,6 @@ public class Settings {
 			highscores.remove(HIGHSCORE_NUM);
 	}
 	public static List<Integer> getScores(){
-		if(highscores != null)
-			highscores.clear();
-		load();
 		return highscores;
 	}
 }

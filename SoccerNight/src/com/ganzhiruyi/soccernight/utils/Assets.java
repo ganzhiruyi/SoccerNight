@@ -1,6 +1,7 @@
 package com.ganzhiruyi.soccernight.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -25,14 +26,16 @@ public class Assets {
 	public static Texture level_1_bg;
 	public static MoveAnimation aniKnight, aniTracker;
 	public static Animation aniHurricane, aniFire;
+	public static AssetManager mAssetsManager;
 
 	public static void load() {
 		// load the source
 		background = loadTexture("main_bg.jpg");
 		backgroundRegion = new TextureRegion(background);
 		level_1_bg = loadTexture("bg_level1.jpg");
-		font = new BitmapFont(Gdx.files.internal("data/font.fnt"),
-				Gdx.files.internal("data/font.png"), false);
+		font = new BitmapFont(Gdx.files.internal("skin/font.fnt"),
+				Gdx.files.internal("skin/font.png"), false);
+		mAssetsManager = new AssetManager();
 		loadRole();
 		loadSoccer();
 		loadMagic();
@@ -40,7 +43,7 @@ public class Assets {
 	}
 
 	private static void loadSkin() {
-		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 	}
 
 	private static void loadSoccer() {

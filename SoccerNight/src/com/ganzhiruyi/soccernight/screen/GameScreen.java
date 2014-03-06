@@ -1,6 +1,5 @@
 package com.ganzhiruyi.soccernight.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Application.ApplicationType;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.math.Vector3;
+import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
 import com.ganzhiruyi.soccernight.utils.Settings;
@@ -25,7 +25,7 @@ public class GameScreen implements Screen {
 	public static final int GAME_RUNNING = 2;
 	public static final int GAME_OVER = 3;
 	public static final int GAME_LEVEL_END = 4;
-	Game game;
+	private SoccerNight game;
 	int state;
 	OrthographicCamera guiCam;
 	Vector3 touchPoint;
@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
 	World world;
 	WorldRenderer renderer;
 
-	public GameScreen(Game game) {
+	public GameScreen(SoccerNight game) {
 		this.game = game;
 		guiCam = new OrthographicCamera(Config.SCREEN_WIDTH,
 				Config.SCREEN_HEIGHT);
@@ -87,13 +87,13 @@ public class GameScreen implements Screen {
 
 	private void updateGameOver() {
 		if (Gdx.input.justTouched()) {
-			game.setScreen(new MainScreen(game));
+			game.setMainScreen();
 		}
 	}
 
 	private void updateLevelEnd() {
 		if (Gdx.input.justTouched()){
-			game.setScreen(new MainScreen(game));
+			game.setMainScreen();
 		}
 	}
 

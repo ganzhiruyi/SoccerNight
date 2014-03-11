@@ -1,8 +1,7 @@
 {
 	com.badlogic.gdx.graphics.g2d.BitmapFont: {
-		default-font: { file: default.fnt },
-		normaltext: { file: font.fnt },
-     	titletext: { file: font.fnt }
+		default-font: { file: ravie-small.fnt },
+     	titletext: { file: ravie.fnt }
 	},
 	com.badlogic.gdx.graphics.Color: {
 		green: { a: 1, b: 0, g: 1, r: 0 },
@@ -18,8 +17,8 @@
 		toggle: { down: default-round-down, checked: default-round-down, up: default-round }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-		default: { down: default-round-down, up: default-round, font: normaltext, fontColor: white },
-		toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: normaltext, fontColor: white, downFontColor: red }
+		default: { down: default-round-down, up: default-round, font: default-font, fontColor: white },
+		toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, downFontColor: red }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 		default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: default-rect, hScroll: default-scroll, vScrollKnob: default-round-large }
@@ -43,9 +42,8 @@
 		default-horizontal: { background: default-slider, knob: default-slider-knob }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-		default: { font: default-font, fontColor: white },
-		normal-text: { font: normaltext, fontColor: white },
-     	title-text: { font: titletext, fontColor: red }
+		default: { font: default-font },
+     	title-text: { font: titletext }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 		default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }
@@ -54,7 +52,7 @@
 		default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
-		default: { fontColorUnselected: white, selection: default-rect-pad, fontColorSelected: white, font: normaltext }
+		default: { fontColorUnselected: white, selection: default-rect-pad, fontColorSelected: white, font: default-font }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 		default: { background: default-pane, knob: default-round-large }

@@ -42,12 +42,13 @@ public class SoccerNight extends Game {
 	}
 
 	public void setGameScreen() {
-		if(mGameScreen != null)
+		if (mGameScreen != null)
 			mGameScreen.dispose();
 		mGameScreen = new GameScreen(this);
 		setScreen(mGameScreen);
 	}
-	public void setLoadScreen(){
+
+	public void setLoadScreen() {
 		setScreen(mLoadScreen);
 	}
 
@@ -59,8 +60,13 @@ public class SoccerNight extends Game {
 	@Override
 	public void dispose() {
 		super.dispose();
-		mGameScreen.dispose();
-		mMainScreen.dispose();
-		mHighScoreScreen.dispose();
+		if (mGameScreen != null)
+			mGameScreen.dispose();
+		if (mMainScreen != null)
+			mMainScreen.dispose();
+		if (mHighScoreScreen != null)
+			mHighScoreScreen.dispose();
+		if (mLoadScreen != null)
+			mLoadScreen.dispose();
 	}
 }

@@ -5,6 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -13,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Array;
 import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
@@ -29,6 +33,7 @@ public class MainScreen implements Screen {
 	private TextButton btnStart, btnScore, btnSetting;
 	float stateTime = 0;
 	private Stage stage;
+	private ParticleEffect starEffect;
 
 	public MainScreen(SoccerNight game) {
 		// init the main screen
@@ -39,9 +44,14 @@ public class MainScreen implements Screen {
 				10);
 		batch = new SpriteBatch();
 	}
+	private void initParticleEffect(){
+		starEffect = new ParticleEffect();
+		starEffect.load(Gdx.files.internal("particles/star.p"), Gdx.files.internal("particles"));
+	}
 
 	private void update(float delta) {
 		// define the mainscreen to other screen logic, deal with touch events
+		
 	}
 
 	private void draw(float delta) {
@@ -50,8 +60,12 @@ public class MainScreen implements Screen {
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-		Table.drawDebug(stage);
+//		batch.setProjectionMatrix(camera.combined);
+//		batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.begin();
+		starEffect.start();
+		starEffect.draw(batch, delta);
+		batch.end();
 		stage.act();
 		stage.draw();
 	}
@@ -73,9 +87,9 @@ public class MainScreen implements Screen {
 		Image bg = new Image(Assets.backgroundRegion);
 		bg.setFillParent(true);
 		stage.addActor(bg);
+		Label title = new Label(STR_SOCCERNIGHT, Assets.skin, "title-text");
 		Table table = new Table();
 		table.setFillParent(true);
-		Label title = new Label(STR_SOCCERNIGHT, Assets.skin, "normal-text");
 		btnStart = new TextButton(STR_START, Assets.skin);
 		btnScore = new TextButton(STR_SCORE, Assets.skin);
 		btnSetting = new TextButton(STR_SETTING, Assets.skin);
@@ -110,10 +124,9 @@ public class MainScreen implements Screen {
 				return true;
 			}
 		});
-		
-		table.add(title).top();
+		table.add(title).expandX().uniform();
 		table.row();
-		table.defaults().width(200).pad(10).center();
+		table.defaults().width(200).height(80).pad(10).center();
 		table.add(btnStart);
 		table.row();
 		table.add(btnScore);
@@ -121,6 +134,8 @@ public class MainScreen implements Screen {
 		table.add(btnSetting);
 		table.debug();
 		stage.addActor(table);
+		initParticleEffect();
+		starEffect.setPosition(200, 200);
 		Gdx.input.setInputProcessor(stage);
 	}
 

@@ -19,6 +19,7 @@ public class HighScoreScreen implements Screen {
 	private Stage stage;
 	private List list;
 	private OrthographicCamera camera;
+
 	public HighScoreScreen(SoccerNight game) {
 		this.game = game;
 		camera = new OrthographicCamera(Config.SCREEN_WIDTH,
@@ -33,7 +34,7 @@ public class HighScoreScreen implements Screen {
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		camera.update();
-		if(Gdx.input.justTouched()){
+		if (Gdx.input.justTouched()) {
 			game.setMainScreen();
 		}
 		stage.act();
@@ -58,26 +59,27 @@ public class HighScoreScreen implements Screen {
 		table.add(list).width(200);
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
-//		Gdx.input.setCatchBackKey(true);
+		// Gdx.input.setCatchBackKey(true);
 	}
 
 	@Override
 	public void hide() {
-		
+
 	}
 
 	@Override
 	public void pause() {
-		
+
 	}
 
 	@Override
 	public void resume() {
-		
+
 	}
 
 	@Override
 	public void dispose() {
-		stage.dispose();
+		if (stage != null)
+			stage.dispose();
 	}
 }

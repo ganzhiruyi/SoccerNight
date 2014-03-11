@@ -33,8 +33,8 @@ public class Assets {
 		background = loadTexture("main_bg.jpg");
 		backgroundRegion = new TextureRegion(background);
 		level_1_bg = loadTexture("bg_level1.jpg");
-		font = new BitmapFont(Gdx.files.internal("skin/font.fnt"),
-				Gdx.files.internal("skin/font.png"), false);
+		font = new BitmapFont(Gdx.files.internal("skin/ravie-small.fnt"),
+				Gdx.files.internal("skin/ravie-small.png"), false);
 		mAssetsManager = new AssetManager();
 		loadRole();
 		loadSoccer();

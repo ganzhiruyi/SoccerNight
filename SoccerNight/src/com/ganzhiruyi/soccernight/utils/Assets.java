@@ -26,7 +26,6 @@ public class Assets {
 	public static Texture level_1_bg;
 	public static MoveAnimation aniKnight, aniTracker;
 	public static Animation aniHurricane, aniFire;
-	public static AssetManager mAssetsManager;
 
 	public static void load() {
 		// load the source
@@ -35,7 +34,6 @@ public class Assets {
 		level_1_bg = loadTexture("bg_level1.jpg");
 		font = new BitmapFont(Gdx.files.internal("skin/ravie-small.fnt"),
 				Gdx.files.internal("skin/ravie-small.png"), false);
-		mAssetsManager = new AssetManager();
 		loadRole();
 		loadSoccer();
 		loadMagic();
@@ -48,11 +46,11 @@ public class Assets {
 
 	private static void loadSoccer() {
 		TextureRegion[][] regions = new TextureRegion(
-				loadTexture("red_soccer.png")).split(241, 241);
+				loadTexture("line_soccer.png")).split(241, 241);
 		lineSocIdle = regions[0][0];
 		aniRedSoc = new Animation(0.2f, regions[0]);
 
-		regions = new TextureRegion(loadTexture("blue_soccer.png")).split(241,
+		regions = new TextureRegion(loadTexture("paddy_soccer.png")).split(241,
 				241);
 		paddySocIdle = regions[0][0];
 		aniBlueSoc = new Animation(0.2f, regions[0]);

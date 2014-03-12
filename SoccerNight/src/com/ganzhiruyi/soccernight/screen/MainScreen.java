@@ -64,6 +64,7 @@ public class MainScreen implements Screen {
 //		batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.begin();
 		starEffect.start();
+		starEffect.update(delta);
 		starEffect.draw(batch, delta);
 		batch.end();
 		stage.act();

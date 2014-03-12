@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -33,6 +34,7 @@ public class GameScreen implements Screen {
 	WorldListener listener;
 	World world;
 	WorldRenderer renderer;
+	Music bgMusic;
 
 	public GameScreen(SoccerNight game) {
 		this.game = game;
@@ -61,6 +63,13 @@ public class GameScreen implements Screen {
 		world = new World(listener);
 		renderer = new WorldRenderer(batch, world);
 		state = GAME_RUNNING;
+		
+	}
+	private void initMusic(){
+		bgMusic = SoccerNight.getAssetManager().get("data/game_bgm.mp3", Music.class);
+		bgMusic.setLooping(true);
+		bgMusic.setVolume(0.5f);
+		bgMusic.play();
 	}
 
 	public void update(float delta) {
@@ -92,7 +101,7 @@ public class GameScreen implements Screen {
 	}
 
 	private void updateLevelEnd() {
-		if (Gdx.input.justTouched()){
+		if (Gdx.input.justTouched()) {
 			game.setMainScreen();
 		}
 	}
@@ -100,12 +109,14 @@ public class GameScreen implements Screen {
 	private void updatePaused() {
 		if (Gdx.input.justTouched()) {
 			state = GAME_RUNNING;
+			bgMusic.play();
 		}
 	}
 
 	private void updateRunning(float delta) {
 		if (Gdx.input.justTouched()) {
 			state = GAME_PAUSED;
+			bgMusic.pause();
 			return;
 		}
 		ApplicationType appType = Gdx.app.getType();
@@ -131,11 +142,12 @@ public class GameScreen implements Screen {
 		if (world.getState() == World.WORLD_STATE_GAME_OVER) {
 			state = GAME_OVER;
 			Settings.save(world.getScore());
+			bgMusic.stop();
 			return;
-		}
-		else if (world.getState() == World.WORLD_STATE_NEXT_LEVEL) {
+		} else if (world.getState() == World.WORLD_STATE_NEXT_LEVEL) {
 			state = GAME_LEVEL_END;
 			Settings.save(world.getScore());
+			bgMusic.stop();
 			return;
 		}
 		world.update(delta, accelX, accelY);
@@ -200,6 +212,7 @@ public class GameScreen implements Screen {
 	private void drawReady() {
 
 	}
+
 	@Override
 	public void render(float delta) {
 		update(delta);
@@ -212,6 +225,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		initMusic();
 	}
 
 	@Override

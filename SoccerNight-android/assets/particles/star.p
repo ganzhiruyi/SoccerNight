@@ -1,4 +1,4 @@
-stars
+star
 - Delay -
 active: false
 - Duration - 
@@ -180,9 +180,9 @@ timeline3: 0.77397263
 timeline4: 1.0
 - Options - 
 attached: false
-continuous: false
+continuous: true
 aligned: false
 additive: true
 behind: false
 - Image Path -
-/star.png
+C:\Users\ganzhiruyi\Desktop\graduation design\Downloads\star.png

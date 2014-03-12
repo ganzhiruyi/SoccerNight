@@ -1,6 +1,7 @@
 package com.ganzhiruyi.soccernight;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.ganzhiruyi.soccernight.screen.GameScreen;
 import com.ganzhiruyi.soccernight.screen.HighScoreScreen;
@@ -16,14 +17,22 @@ public class SoccerNight extends Game {
 	private HighScoreScreen mHighScoreScreen;
 	private GameScreen mGameScreen;
 	private LoadScreen mLoadScreen;
+	private static AssetManager mAssetManager;
 
 	@Override
 	public void create() {
+		mAssetManager = new AssetManager();
 		Assets.load();
 		Settings.load();
 		initScreens();
-		setMainScreen();
+		setLoadScreen();
 		fps = new FPSLogger();
+	}
+	public static AssetManager getAssetManager(){
+		if(mAssetManager == null){
+			mAssetManager = new AssetManager();
+		}
+		return mAssetManager;
 	}
 
 	private void initScreens() {
@@ -68,5 +77,7 @@ public class SoccerNight extends Game {
 			mHighScoreScreen.dispose();
 		if (mLoadScreen != null)
 			mLoadScreen.dispose();
+		if(mAssetManager != null)
+			mAssetManager.dispose();
 	}
 }

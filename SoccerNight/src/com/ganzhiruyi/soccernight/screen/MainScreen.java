@@ -2,6 +2,8 @@ package com.ganzhiruyi.soccernight.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,6 +36,8 @@ public class MainScreen implements Screen {
 	float stateTime = 0;
 	private Stage stage;
 	private ParticleEffect starEffect;
+	private Sound buttonSound;
+	private Music mainBgm;
 
 	public MainScreen(SoccerNight game) {
 		// init the main screen
@@ -47,6 +51,12 @@ public class MainScreen implements Screen {
 	private void initParticleEffect(){
 		starEffect = new ParticleEffect();
 		starEffect.load(Gdx.files.internal("particles/star.p"), Gdx.files.internal("particles"));
+	}
+	private void initMusic(){
+		buttonSound = SoccerNight.getAssetManager().get("media/button.wav", Sound.class);
+		mainBgm = SoccerNight.getAssetManager().get("media/main_bgm.wav", Music.class);
+		mainBgm.setLooping(true);
+		mainBgm.setVolume(0.5f);
 	}
 
 	private void update(float delta) {
@@ -84,7 +94,7 @@ public class MainScreen implements Screen {
 
 	@Override
 	public void show() {
-		stage = new Stage();
+		stage = new Stage(480, 320);
 		Image bg = new Image(Assets.backgroundRegion);
 		bg.setFillParent(true);
 		stage.addActor(bg);
@@ -98,11 +108,13 @@ public class MainScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
+				buttonSound.play(1);
 				return true;
 			}
 			@Override
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
+				mainBgm.stop();
 				game.setGameScreen();
 			}
 		});
@@ -110,11 +122,13 @@ public class MainScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
+				buttonSound.play(1);
 				return true;
 			}
 			@Override
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
+				mainBgm.stop();
 				game.setHighScoreScreen();
 			}
 		});
@@ -122,6 +136,7 @@ public class MainScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
+				buttonSound.play(1);
 				return true;
 			}
 		});
@@ -137,6 +152,8 @@ public class MainScreen implements Screen {
 		stage.addActor(table);
 		initParticleEffect();
 		starEffect.setPosition(200, 200);
+		initMusic();
+		mainBgm.play();
 		Gdx.input.setInputProcessor(stage);
 	}
 

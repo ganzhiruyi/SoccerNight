@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,6 +18,7 @@ public class LoadScreen implements Screen {
 	public static final float MIN_LOADING_SPAN = 1;
 	private SoccerNight game;
 	private Stage stage;
+	private float stateTime = 0;
 	public LoadScreen(SoccerNight game) {
 		this.game = game;
 	}
@@ -26,11 +28,14 @@ public class LoadScreen implements Screen {
 		GLCommon gl = Gdx.gl;
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        if (SoccerNight.getAssetManager().update()) {
+        if (SoccerNight.getAssetManager().update() && stateTime >= 1.5) {
+        	Sound open = SoccerNight.getAssetManager().get("media/open.wav", Sound.class);
+        	open.play(1);
             game.setMainScreen();
         }
         stage.act();
         stage.draw();
+        stateTime += delta;
 	}
 
 	@Override
@@ -51,12 +56,17 @@ public class LoadScreen implements Screen {
 	}
 	private void loadAsset(){
 		AssetManager manager = SoccerNight.getAssetManager();
-		manager.load("data/game_bgm.mp3", Music.class);
+		manager.load("media/main_bgm.wav", Music.class);
+		manager.load("media/game_bgm.mp3", Music.class);
+		manager.load("media/appear.wav", Sound.class);
+		manager.load("media/button.wav", Sound.class);
+		manager.load("media/exit.wav", Sound.class);
+		manager.load("media/open.wav", Sound.class);
+		manager.load("media/pause.wav", Sound.class);
 	}
 
 	@Override
 	public void hide() {
-		
 	}
 
 	@Override

@@ -66,7 +66,7 @@ public class GameScreen implements Screen {
 		
 	}
 	private void initMusic(){
-		bgMusic = SoccerNight.getAssetManager().get("data/game_bgm.mp3", Music.class);
+		bgMusic = SoccerNight.getAssetManager().get("media/game_bgm.mp3", Music.class);
 		bgMusic.setLooping(true);
 		bgMusic.setVolume(0.5f);
 		bgMusic.play();

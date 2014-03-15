@@ -7,7 +7,11 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,6 +23,7 @@ public class LoadScreen implements Screen {
 	private SoccerNight game;
 	private Stage stage;
 	private float stateTime = 0;
+	private TextureAtlas atlas;
 	public LoadScreen(SoccerNight game) {
 		this.game = game;
 	}
@@ -28,7 +33,7 @@ public class LoadScreen implements Screen {
 		GLCommon gl = Gdx.gl;
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        if (SoccerNight.getAssetManager().update() && stateTime >= 1.5) {
+        if (SoccerNight.getAssetManager().update() && stateTime >= 2) {
         	Sound open = SoccerNight.getAssetManager().get("media/open.wav", Sound.class);
         	open.play(1);
             game.setMainScreen();
@@ -46,11 +51,17 @@ public class LoadScreen implements Screen {
 	@Override
 	public void show() {
 		loadAsset();
+		TextureRegion loadRegion = SoccerNight.mAltas.findRegion("loading");
 		stage = new Stage();
 		Table loadTable = new Table();
 		loadTable.setFillParent(true);
 		Label loadLabel = new Label("Loading...", Assets.skin, "title-text");
 		loadTable.add(loadLabel).center().width(400).height(200);
+		loadTable.row();
+		Image loadImage = new Image(loadRegion);
+		loadTable.add(loadImage).center().height(60).width(60);
+		loadImage.setOrigin(loadImage.getOriginX() + 30, loadImage.getImageY() + 30);
+		loadImage.addAction(Actions.repeat(100, Actions.rotateBy(-360, 1f)));
 		stage.addActor(loadTable);
 		Gdx.input.setInputProcessor(stage);
 	}
@@ -60,9 +71,10 @@ public class LoadScreen implements Screen {
 		manager.load("media/game_bgm.mp3", Music.class);
 		manager.load("media/appear.wav", Sound.class);
 		manager.load("media/button.wav", Sound.class);
-		manager.load("media/exit.wav", Sound.class);
 		manager.load("media/open.wav", Sound.class);
 		manager.load("media/pause.wav", Sound.class);
+		manager.load("media/success.wav", Sound.class);
+		manager.load("media/gameover.wav", Sound.class);
 	}
 
 	@Override

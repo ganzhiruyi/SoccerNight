@@ -1,8 +1,10 @@
 package com.ganzhiruyi.soccernight;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.ganzhiruyi.soccernight.screen.GameScreen;
 import com.ganzhiruyi.soccernight.screen.HighScoreScreen;
 import com.ganzhiruyi.soccernight.screen.LoadScreen;
@@ -18,12 +20,14 @@ public class SoccerNight extends Game {
 	private GameScreen mGameScreen;
 	private LoadScreen mLoadScreen;
 	private static AssetManager mAssetManager;
+	public static TextureAtlas mAltas;
 
 	@Override
 	public void create() {
 		mAssetManager = new AssetManager();
 		Assets.load();
 		Settings.load();
+		mAltas = new TextureAtlas(Gdx.files.internal("skin/skin.pack"));
 		initScreens();
 		setLoadScreen();
 		fps = new FPSLogger();

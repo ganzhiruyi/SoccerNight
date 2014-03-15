@@ -8,20 +8,20 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.utils.Settings;
 
 public class MainScreen implements Screen {
 	public static final String STR_SOCCERNIGHT = "Soccer Night";
@@ -38,6 +38,7 @@ public class MainScreen implements Screen {
 	private ParticleEffect starEffect;
 	private Sound buttonSound;
 	private Music mainBgm;
+	private CheckBox cbSound;
 
 	public MainScreen(SoccerNight game) {
 		// init the main screen
@@ -60,8 +61,7 @@ public class MainScreen implements Screen {
 	}
 
 	private void update(float delta) {
-		// define the mainscreen to other screen logic, deal with touch events
-		
+		//Settings.getInstance().setSoundEnable(cbSound.isChecked());
 	}
 
 	private void draw(float delta) {
@@ -70,13 +70,6 @@ public class MainScreen implements Screen {
 		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		camera.update();
-//		batch.setProjectionMatrix(camera.combined);
-//		batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		batch.begin();
-		starEffect.start();
-		starEffect.update(delta);
-		starEffect.draw(batch, delta);
-		batch.end();
 		stage.act();
 		stage.draw();
 	}
@@ -96,19 +89,25 @@ public class MainScreen implements Screen {
 	public void show() {
 		stage = new Stage(480, 320);
 		Image bg = new Image(Assets.backgroundRegion);
+		Image logo = new Image(SoccerNight.mAltas.findRegion("soccernight"));
 		bg.setFillParent(true);
 		stage.addActor(bg);
-		Label title = new Label(STR_SOCCERNIGHT, Assets.skin, "title-text");
 		Table table = new Table();
 		table.setFillParent(true);
 		btnStart = new TextButton(STR_START, Assets.skin);
 		btnScore = new TextButton(STR_SCORE, Assets.skin);
 		btnSetting = new TextButton(STR_SETTING, Assets.skin);
+		CheckBoxStyle style = new CheckBoxStyle();
+		style.checkboxOn = new TextureRegionDrawable(SoccerNight.mAltas.findRegion("sound_on"));
+		style.checkboxOff = new TextureRegionDrawable(SoccerNight.mAltas.findRegion("sound_off"));
+		style.font = Assets.font;
+		cbSound = new CheckBox("", style);
+		cbSound.setChecked(Settings.getInstance().isSoundEnable());
 		btnStart.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				buttonSound.play(1);
+				Settings.getInstance().playSound(buttonSound);
 				return true;
 			}
 			@Override
@@ -122,7 +121,7 @@ public class MainScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				buttonSound.play(1);
+				Settings.getInstance().playSound(buttonSound);
 				return true;
 			}
 			@Override
@@ -136,11 +135,29 @@ public class MainScreen implements Screen {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				buttonSound.play(1);
+				Settings.getInstance().playSound(buttonSound);
 				return true;
 			}
 		});
-		table.add(title).expandX().uniform();
+		cbSound.addListener(new InputListener(){
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				return true;
+			}
+			@Override
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				Settings.getInstance().setSoundEnable(cbSound.isChecked());
+				if(cbSound.isChecked()){
+					mainBgm.play();
+				}
+				else{
+					mainBgm.stop();
+				}
+			}
+		});
+		table.add(logo).top();
 		table.row();
 		table.defaults().width(200).height(80).pad(10).center();
 		table.add(btnStart);
@@ -148,12 +165,21 @@ public class MainScreen implements Screen {
 		table.add(btnScore);
 		table.row();
 		table.add(btnSetting);
-		table.debug();
+		table.row();
+		table.add(cbSound).bottom().right().expandX();
+		table.row();
 		stage.addActor(table);
-		initParticleEffect();
-		starEffect.setPosition(200, 200);
+		float x = 0;
+		for(int i = 0; i < 30;i++){
+			Image grass = new Image(SoccerNight.mAltas.findRegion("grass"));
+			grass.setPosition(x, 0);
+			grass.setWidth(60);
+			grass.setHeight(60);
+			stage.addActor(grass);
+			x += 55;
+		}
 		initMusic();
-		mainBgm.play();
+		Settings.getInstance().playMusic(mainBgm);
 		Gdx.input.setInputProcessor(stage);
 	}
 

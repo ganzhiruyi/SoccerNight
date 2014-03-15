@@ -4,15 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 
 public class Settings {
 	public static final int HIGHSCORE_NUM = 5;
 	public static final String HIGHSCORE_RECORDE = "soccernight_highscore.txt";
+	public static final String SOUND_ENABLE = "sound_enable";
 	private static List<Integer> highscores = new ArrayList<Integer>();
-	public static boolean soundEnable = true;
-	static {
-		Gdx.files.local(HIGHSCORE_RECORDE).write(false);
+	private boolean soundEnable;
+	private static Settings instance;
+	private Preferences mPrefs = Gdx.app.getPreferences("settings");
+	public static Settings getInstance(){
+		if(instance == null){
+			instance = new Settings();
+		}
+		return instance;
+	}
+	public Settings(){
+		soundEnable = true;
 	}
 
 	public static void load() {
@@ -55,7 +67,36 @@ public class Settings {
 		if (highscores.size() > HIGHSCORE_NUM)
 			highscores.remove(HIGHSCORE_NUM);
 	}
-	public static List<Integer> getScores(){
+
+	public static List<Integer> getScores() {
 		return highscores;
 	}
+
+	public void playMusic(Music music) {
+		if (!soundEnable)
+			return;
+		music.play();
+	}
+
+	public void playSound(Sound sound, float volume) {
+		if (!soundEnable)
+			return;
+		sound.play(volume);
+	}
+
+	public void playSound(Sound sound) {
+		playSound(sound, 1);
+	}
+	public void setSoundEnable(boolean enable){
+		if(soundEnable == enable)
+			return;
+		soundEnable = enable;
+		mPrefs.putBoolean(SOUND_ENABLE, enable);
+		mPrefs.flush();
+	}
+	public boolean isSoundEnable(){
+		soundEnable = mPrefs.getBoolean(SOUND_ENABLE, true);
+		return soundEnable;
+	}
+
 }

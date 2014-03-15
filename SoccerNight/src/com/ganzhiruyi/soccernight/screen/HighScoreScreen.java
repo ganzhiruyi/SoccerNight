@@ -50,13 +50,14 @@ public class HighScoreScreen implements Screen {
 	public void show() {
 		stage = new Stage();
 		Image bg = new Image(Assets.backgroundRegion);
+		Image trophy = new Image(SoccerNight.mAltas.findRegion("trophy"));
 		bg.setFillParent(true);
 		stage.addActor(bg);
 		list = new List(Settings.getScores().toArray(), Assets.skin);
 		Table table = new Table();
 		table.setFillParent(true);
-		table.center();
-		table.add(list).width(200);
+		table.add(trophy).pad(20);
+		table.add(list).width(200).center();
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
 		// Gdx.input.setCatchBackKey(true);

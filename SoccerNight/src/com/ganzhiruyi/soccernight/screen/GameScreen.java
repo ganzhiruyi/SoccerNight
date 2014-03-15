@@ -5,13 +5,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
@@ -19,6 +23,7 @@ import com.ganzhiruyi.soccernight.utils.Settings;
 import com.ganzhiruyi.soccernight.world.World;
 import com.ganzhiruyi.soccernight.world.World.WorldListener;
 import com.ganzhiruyi.soccernight.world.WorldRenderer;
+import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion.Setting;
 
 public class GameScreen implements Screen {
 	public static final int GAME_READY = 0;
@@ -27,14 +32,16 @@ public class GameScreen implements Screen {
 	public static final int GAME_OVER = 3;
 	public static final int GAME_LEVEL_END = 4;
 	private SoccerNight game;
-	int state;
-	OrthographicCamera guiCam;
-	Vector3 touchPoint;
-	SpriteBatch batch;
-	WorldListener listener;
-	World world;
-	WorldRenderer renderer;
-	Music bgMusic;
+	private int state;
+	private OrthographicCamera guiCam;
+	private Vector3 touchPoint;
+	private SpriteBatch batch;
+	private WorldListener listener;
+	private World world;
+	private WorldRenderer renderer;
+	private Music bgMusic;
+	private Sound bossAppearSound, pauseSound, successSound, gameoverSound;
+	private TextureRegion pauseRegion;
 
 	public GameScreen(SoccerNight game) {
 		this.game = game;
@@ -47,11 +54,6 @@ public class GameScreen implements Screen {
 		listener = new WorldListener() {
 
 			@Override
-			public void hit() {
-
-			}
-
-			@Override
 			public void getSoccer(int type) {
 
 			}
@@ -59,22 +61,33 @@ public class GameScreen implements Screen {
 			@Override
 			public void getCoins() {
 			}
+
+			@Override
+			public void bossAppear() {
+				bossAppearSound.play(1f);
+			}
 		};
 		world = new World(listener);
 		renderer = new WorldRenderer(batch, world);
 		state = GAME_RUNNING;
-		
+
 	}
-	private void initMusic(){
-		bgMusic = SoccerNight.getAssetManager().get("media/game_bgm.mp3", Music.class);
+
+	private void initAssets() {
+		pauseRegion = SoccerNight.mAltas.findRegion("pause");
+		AssetManager manager = SoccerNight.getAssetManager();
+		bossAppearSound = manager.get("media/appear.wav", Sound.class);
+		pauseSound = manager.get("media/pause.wav", Sound.class);
+		gameoverSound = manager.get("media/gameover.wav", Sound.class);
+		successSound = manager.get("media/success.wav", Sound.class);
+		bgMusic = manager.get("media/game_bgm.mp3", Music.class);
 		bgMusic.setLooping(true);
-		bgMusic.setVolume(0.5f);
-		bgMusic.play();
+		bgMusic.setVolume(0.6f);
+		Settings.getInstance().playMusic(bgMusic);
 	}
 
 	public void update(float delta) {
-		if (delta > 0.1f)
-			delta = 0.1f;
+		world.addNewObject();
 		switch (state) {
 		case GAME_READY:
 			updateReady();
@@ -109,7 +122,8 @@ public class GameScreen implements Screen {
 	private void updatePaused() {
 		if (Gdx.input.justTouched()) {
 			state = GAME_RUNNING;
-			bgMusic.play();
+			Settings.getInstance().playMusic(bgMusic);
+			pauseSound.stop();
 		}
 	}
 
@@ -117,11 +131,10 @@ public class GameScreen implements Screen {
 		if (Gdx.input.justTouched()) {
 			state = GAME_PAUSED;
 			bgMusic.pause();
+			Settings.getInstance().playSound(pauseSound);
 			return;
 		}
 		ApplicationType appType = Gdx.app.getType();
-		// should work also with
-		// Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
 		float accelX = 0, accelY = 0;
 		if (appType == ApplicationType.Android
 				|| appType == ApplicationType.iOS) {
@@ -143,11 +156,13 @@ public class GameScreen implements Screen {
 			state = GAME_OVER;
 			Settings.save(world.getScore());
 			bgMusic.stop();
+			Settings.getInstance().playSound(gameoverSound);
 			return;
 		} else if (world.getState() == World.WORLD_STATE_NEXT_LEVEL) {
 			state = GAME_LEVEL_END;
 			Settings.save(world.getScore());
 			bgMusic.stop();
+			Settings.getInstance().playSound(successSound);
 			return;
 		}
 		world.update(delta, accelX, accelY);
@@ -202,7 +217,7 @@ public class GameScreen implements Screen {
 	}
 
 	private void drawPaused() {
-
+		batch.draw(pauseRegion, Config.SCREEN_WIDTH/2, Config.SCREEN_HEIGHT/2, 60, 60);
 	}
 
 	private void drawRunning(float delta) {
@@ -225,7 +240,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		initMusic();
+		initAssets();
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package com.ganzhiruyi.soccernight.utils;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -140,11 +138,5 @@ public class Assets {
 	public static Texture loadTexture(String filename) {
 		String path = "data/" + filename;
 		return new Texture(Gdx.files.internal(path));
-	}
-
-	public static void playSound(Sound sound) {
-		// set the sound play model and set the volume
-		if (Settings.soundEnable)
-			sound.play(1);
 	}
 }

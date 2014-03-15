@@ -32,28 +32,28 @@ public class World {
 	public static final int WORLD_STATE_RUNNING = 0;
 	public static final int WORLD_STATE_NEXT_LEVEL = 1;
 	public static final int WORLD_STATE_GAME_OVER = 2;
-	public static final int LIMIT_NUM_ZOMBIE = 5;
-	public static final int LIMIT_NUM_SOCCER = 4;
-	public static final int LEVEL_NUM_ZOMBIE = 10;
-	public static final int SOCCER_TYPE_NUM = 5; 
+	public static final int LIMIT_NUM_ZOMBIE = 10;
+	public static final int LIMIT_NUM_SOCCER = 5;
+	public static final int LEVEL_NUM_ZOMBIE = 20;
+	public static final int SOCCER_TYPE_NUM = 5;
 
 	public interface WorldListener {
-		public void hit();
+		public void bossAppear();
 
 		public void getCoins();
 
 		public void getSoccer(int type);
 	}
 
-	WorldListener listener;
+	private WorldListener listener;
 	private List<Soccer> soccers;
 	private List<Zombie> zombies;
 	private List<Magic> magics;
 	private Bob bob;
 	private Random rand;
 	private int state;
-	private int zombieCount = 0;
-	private int score = 0;
+	private int zombieCount;
+	private int score;
 	private boolean isPrincessShow;
 
 	public World(WorldListener listener) {
@@ -69,6 +69,7 @@ public class World {
 		magics = new ArrayList<Magic>();
 		rand = new Random();
 		state = WORLD_STATE_RUNNING;
+		zombieCount = score = 0;
 		isPrincessShow = false;
 	}
 
@@ -83,7 +84,6 @@ public class World {
 		if (zombies.size() >= LIMIT_NUM_ZOMBIE
 				|| zombieCount >= LEVEL_NUM_ZOMBIE)
 			return;
-		zombieCount++;
 		float x = 0, y = 0;
 		if (edge == 0)
 			x = rand.nextInt((int) Config.SCREEN_WIDTH);
@@ -100,13 +100,17 @@ public class World {
 			zombies.add(new Tracker(x, y));
 		else if (type == 1)
 			zombies.add(new Knight(x, y));
-		else if (type == 2)
+		else if (type == 2) {
 			zombies.add(new Princess(x, y));
+			isPrincessShow = true;
+			listener.bossAppear();
+		}
+		zombieCount++;
 	}
 
 	private void initSoccers() {
 		for (int i = 0; i < SOCCER_TYPE_NUM; i++) {
-			addSoccer(i % SOCCER_TYPE_NUM);
+			addSoccer(i % (SOCCER_TYPE_NUM + 1));
 		}
 	}
 
@@ -124,11 +128,11 @@ public class World {
 			soccers.add(new LineSoccer(x, y));
 		else if (type == 1)
 			soccers.add(new PaddySoccer(x, y));
-		else if(type == 2)
+		else if (type == 2)
 			soccers.add(new RoundSoccer(x, y));
-		else if(type == 3)
-			soccers.add(new WaveSoccer(x,y));
-		else if(type == 4)
+		else if (type == 3)
+			soccers.add(new WaveSoccer(x, y));
+		else if (type == 4)
 			soccers.add(new BombSoccer(x, y));
 	}
 
@@ -156,7 +160,7 @@ public class World {
 
 	private void updateZombies(float deltaTime) {
 		if (zombies.size() == 0) {
-			if (zombieCount >= LEVEL_NUM_ZOMBIE)
+			if (zombieCount >= LEVEL_NUM_ZOMBIE && isPrincessShow)
 				state = WORLD_STATE_NEXT_LEVEL;
 			return;
 		}
@@ -177,24 +181,23 @@ public class World {
 				else
 					y = (bob.position.y - z.position.y)
 							/ (bob.position.x - z.position.x) * x;
-				if(y > 1.5f)
+				if (y > 1.5f)
 					y = 1.5f;
-				else if(y < -1.5f)
+				else if (y < -1.5f)
 					y = -1.5f;
 				z.update(deltaTime, x, y);
 			} else if (z instanceof Princess) {
 				z.update(deltaTime, x, y);
 				Vector2 vec = new Vector2(0, 0);
 				vec.x = z.isRight ? Magic.VELOCITY : -Magic.VELOCITY;
-				int move = ((Princess) z).getMove(); 
+				int move = ((Princess) z).getMove();
 				if (move == Princess.STAB) {
-					if(((Princess) z).getHurricaneNum() <= 2){
+					if (((Princess) z).getHurricaneNum() <= 2) {
 						addMagic(0, z.position.x, z.position.y, deltaTime, vec);
 						((Princess) z).addHurricaneNum(1);
 					}
-				}
-				else if(move == Princess.HACK){
-					if(((Princess) z).getFireNum() == 0){
+				} else if (move == Princess.HACK) {
+					if (((Princess) z).getFireNum() == 0) {
 						addMagic(1, z.position.x, z.position.y, deltaTime, vec);
 						vec.y += 2;
 						addMagic(1, z.position.x, z.position.y, deltaTime, vec);
@@ -202,8 +205,7 @@ public class World {
 						addMagic(1, z.position.x, z.position.y, deltaTime, vec);
 						((Princess) z).addFireNum(3);
 					}
-				}
-				else if(move == Princess.WALK){
+				} else if (move == Princess.WALK) {
 					((Princess) z).addHurricaneNum(-2);
 					((Princess) z).addFireNum(-3);
 				}
@@ -224,22 +226,20 @@ public class World {
 	private void addMagic(int type, float x, float y, float deltaTime,
 			Vector2 vec) {
 		Magic magic;
-		if(type == 0){
+		if (type == 0) {
 			magic = new Hurricane(x, y);
 			magic.update(deltaTime, vec.x, vec.y);
 			magics.add(magic);
-		}
-		else if(type == 1){
+		} else if (type == 1) {
 			magic = new Fire(x, y);
 			magic.update(deltaTime, vec.x, vec.y);
 			magics.add(magic);
 		}
 	}
 
-	private void addNewObject() {
-		if(!isPrincessShow){
+	public void addNewObject() {
+		if (!isPrincessShow && zombieCount >= LEVEL_NUM_ZOMBIE - 4) {
 			addZombie(2, rand.nextInt(4));
-			isPrincessShow = true;
 		}
 		int nextObject = rand.nextInt() % 50;
 		if (nextObject < SOCCER_TYPE_NUM)
@@ -264,9 +264,10 @@ public class World {
 			}
 		}
 	}
-	private void collisionMagic(){
-		for(Magic m : magics){
-			if(OverlapTester.overlapRectangles(bob.bounds, m.bounds)){
+
+	private void collisionMagic() {
+		for (Magic m : magics) {
+			if (OverlapTester.overlapRectangles(bob.bounds, m.bounds)) {
 				state = WORLD_STATE_GAME_OVER;
 				break;
 			}
@@ -292,9 +293,9 @@ public class World {
 						score++;
 					}
 				}
-				for(int k = 0;k < magics.size();k++){
+				for (int k = 0; k < magics.size(); k++) {
 					Magic m = magics.get(k);
-					if(OverlapTester.overlapRectangles(s.bounds, m.bounds))
+					if (OverlapTester.overlapRectangles(s.bounds, m.bounds))
 						magics.remove(k);
 				}
 				s.roll(deltaTime);
@@ -303,10 +304,10 @@ public class World {
 			} else if (OverlapTester.overlapRectangles(bob.bounds, s.bounds)) {
 				float accelX = bob.velocity.x;
 				float accelY = bob.velocity.y;
-				if(s instanceof RoundSoccer){
-					if(Math.abs(accelX) > Math.abs(accelY))
-						accelY = 0; 
-					else if(Math.abs(accelX) < Math.abs(accelY))
+				if (s instanceof RoundSoccer) {
+					if (Math.abs(accelX) > Math.abs(accelY))
+						accelY = 0;
+					else if (Math.abs(accelX) < Math.abs(accelY))
 						accelX = 0;
 				}
 				s.update(deltaTime, accelX, accelY);

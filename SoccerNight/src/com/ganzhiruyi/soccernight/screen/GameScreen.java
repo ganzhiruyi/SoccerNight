@@ -14,8 +14,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
@@ -23,7 +21,6 @@ import com.ganzhiruyi.soccernight.utils.Settings;
 import com.ganzhiruyi.soccernight.world.World;
 import com.ganzhiruyi.soccernight.world.World.WorldListener;
 import com.ganzhiruyi.soccernight.world.WorldRenderer;
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion.Setting;
 
 public class GameScreen implements Screen {
 	public static final int GAME_READY = 0;
@@ -34,7 +31,6 @@ public class GameScreen implements Screen {
 	private SoccerNight game;
 	private int state;
 	private OrthographicCamera guiCam;
-	private Vector3 touchPoint;
 	private SpriteBatch batch;
 	private WorldListener listener;
 	private World world;
@@ -49,7 +45,6 @@ public class GameScreen implements Screen {
 				Config.SCREEN_HEIGHT);
 		guiCam.position.set(Config.SCREEN_WIDTH / 2, Config.SCREEN_HEIGHT / 2,
 				0);
-		touchPoint = new Vector3();
 		batch = new SpriteBatch();
 		listener = new WorldListener() {
 
@@ -154,13 +149,13 @@ public class GameScreen implements Screen {
 		}
 		if (world.getState() == World.WORLD_STATE_GAME_OVER) {
 			state = GAME_OVER;
-			Settings.save(world.getScore());
+			Settings.getInstance().save(world.getScore());
 			bgMusic.stop();
 			Settings.getInstance().playSound(gameoverSound);
 			return;
 		} else if (world.getState() == World.WORLD_STATE_NEXT_LEVEL) {
 			state = GAME_LEVEL_END;
-			Settings.save(world.getScore());
+			Settings.getInstance().save(world.getScore());
 			bgMusic.stop();
 			Settings.getInstance().playSound(successSound);
 			return;

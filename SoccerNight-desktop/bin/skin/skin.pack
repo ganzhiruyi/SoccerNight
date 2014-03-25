@@ -87,3 +87,19 @@ sound_on
   orig: 100, 100
   offset: 0, 0
   index: -1
+btn
+  rotate: false
+  xy: 244, 137
+  size: 128, 64
+  split: 3, 5, 2, 2
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+btn_press
+  rotate: false
+  xy: 244, 71
+  size: 128, 64
+  split: 3, 3, 2, 2
+  orig: 128, 64
+  offset: 0, 0
+  index: -1

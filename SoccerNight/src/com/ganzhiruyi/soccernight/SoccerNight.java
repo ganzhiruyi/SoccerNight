@@ -9,6 +9,7 @@ import com.ganzhiruyi.soccernight.screen.GameScreen;
 import com.ganzhiruyi.soccernight.screen.HighScoreScreen;
 import com.ganzhiruyi.soccernight.screen.LoadScreen;
 import com.ganzhiruyi.soccernight.screen.MainScreen;
+import com.ganzhiruyi.soccernight.screen.SettingScreen;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Settings;
 
@@ -19,6 +20,7 @@ public class SoccerNight extends Game {
 	private HighScoreScreen mHighScoreScreen;
 	private GameScreen mGameScreen;
 	private LoadScreen mLoadScreen;
+	private SettingScreen mSettingScreen;
 	private static AssetManager mAssetManager;
 	public static TextureAtlas mAltas;
 
@@ -26,14 +28,15 @@ public class SoccerNight extends Game {
 	public void create() {
 		mAssetManager = new AssetManager();
 		Assets.load();
-		Settings.load();
+		Settings.getInstance().load();
 		mAltas = new TextureAtlas(Gdx.files.internal("skin/skin.pack"));
 		initScreens();
 		setLoadScreen();
 		fps = new FPSLogger();
 	}
-	public static AssetManager getAssetManager(){
-		if(mAssetManager == null){
+
+	public static AssetManager getAssetManager() {
+		if (mAssetManager == null) {
 			mAssetManager = new AssetManager();
 		}
 		return mAssetManager;
@@ -44,6 +47,7 @@ public class SoccerNight extends Game {
 		mHighScoreScreen = new HighScoreScreen(this);
 		mGameScreen = new GameScreen(this);
 		mLoadScreen = new LoadScreen(this);
+		mSettingScreen = new SettingScreen(this);
 	}
 
 	public void setMainScreen() {
@@ -52,6 +56,10 @@ public class SoccerNight extends Game {
 
 	public void setHighScoreScreen() {
 		setScreen(mHighScoreScreen);
+	}
+
+	public void setSettingScreen() {
+		setScreen(mSettingScreen);
 	}
 
 	public void setGameScreen() {
@@ -81,7 +89,9 @@ public class SoccerNight extends Game {
 			mHighScoreScreen.dispose();
 		if (mLoadScreen != null)
 			mLoadScreen.dispose();
-		if(mAssetManager != null)
+		if (mSettingScreen != null)
+			mSettingScreen.dispose();
+		if (mAssetManager != null)
 			mAssetManager.dispose();
 	}
 }

@@ -17,6 +17,7 @@ import com.ganzhiruyi.soccernight.soccer.RoundSoccer;
 import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.soccer.WaveSoccer;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.utils.Settings;
 import com.ganzhiruyi.soccernight.zombie.Knight;
 import com.ganzhiruyi.soccernight.zombie.Princess;
 import com.ganzhiruyi.soccernight.zombie.Tracker;
@@ -32,10 +33,10 @@ public class World {
 	public static final int WORLD_STATE_RUNNING = 0;
 	public static final int WORLD_STATE_NEXT_LEVEL = 1;
 	public static final int WORLD_STATE_GAME_OVER = 2;
-	public static final int LIMIT_NUM_ZOMBIE = 10;
-	public static final int LIMIT_NUM_SOCCER = 5;
-	public static final int LEVEL_NUM_ZOMBIE = 20;
-	public static final int SOCCER_TYPE_NUM = 5;
+	public static int LIMIT_NUM_ZOMBIE = 5;
+	public static int LIMIT_NUM_SOCCER = 5;
+	public static int LEVEL_NUM_ZOMBIE = 10;
+	public static int SOCCER_TYPE_NUM = 5;
 
 	public interface WorldListener {
 		public void bossAppear();
@@ -71,6 +72,18 @@ public class World {
 		state = WORLD_STATE_RUNNING;
 		zombieCount = score = 0;
 		isPrincessShow = false;
+		// init difficulty
+		int diff = Settings.getInstance().getDifficulty();
+		if (diff == 0) {
+			LIMIT_NUM_ZOMBIE = 5;
+			LEVEL_NUM_ZOMBIE = 10;
+		} else if (diff == 1) {
+			LIMIT_NUM_ZOMBIE = 10;
+			LEVEL_NUM_ZOMBIE = 20;
+		} else if (diff == 2) {
+			LIMIT_NUM_ZOMBIE = 15;
+			LEVEL_NUM_ZOMBIE = 30;
+		}
 	}
 
 	private void initZombies() {

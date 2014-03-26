@@ -91,7 +91,7 @@ btn
   rotate: false
   xy: 244, 137
   size: 128, 64
-  split: 3, 5, 2, 2
+  split: 8, 9, 8, 8
   orig: 128, 64
   offset: 0, 0
   index: -1
@@ -99,7 +99,7 @@ btn_press
   rotate: false
   xy: 244, 71
   size: 128, 64
-  split: 3, 3, 2, 2
+  split: 8, 9, 8, 8
   orig: 128, 64
   offset: 0, 0
   index: -1

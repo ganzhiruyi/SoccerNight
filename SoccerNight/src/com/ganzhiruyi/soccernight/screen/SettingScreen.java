@@ -5,14 +5,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
@@ -53,6 +51,9 @@ public class SettingScreen implements Screen {
 		stage = new Stage();
 		String[] items = new String[] { "Normal", "Difficult", "Nightmare" };
 		diffBox = new SelectBox(items, Assets.skin);
+		Image bg = new Image(Assets.backgroundRegion);
+		bg.setFillParent(true);
+		stage.addActor(bg);
 		Table table = new Table();
 		table.setFillParent(true);
 		int diff = Settings.getInstance().getDifficulty();
@@ -65,12 +66,6 @@ public class SettingScreen implements Screen {
 				game.setMainScreen();
 				return false;
 			}
-		});
-		diffBox.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-			}
-			
 		});
 		table.add(back).bottom().left().width(80).height(80).pad(10);
 		table.add(diffBox).center().width(200).height(80).expand();

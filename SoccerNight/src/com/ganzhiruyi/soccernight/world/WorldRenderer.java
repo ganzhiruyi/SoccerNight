@@ -2,7 +2,9 @@ package com.ganzhiruyi.soccernight.world;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ganzhiruyi.soccernight.magic.Fire;
@@ -28,12 +30,15 @@ public class WorldRenderer {
 	private World world;
 	private OrthographicCamera cam;
 	private SpriteBatch batch;
+	private ParticleEffect starEffect;
 
 	public WorldRenderer(SpriteBatch batch, World world) {
 		this.world = world;
 		this.batch = batch;
 		this.cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
 		this.cam.position.set(FRUSTUM_WIDTH / 2, FRUSTUM_HEIGHT / 2, 0);
+		starEffect = new ParticleEffect();
+		starEffect.load(Gdx.files.internal("particles/star.p"), Gdx.files.internal("particles"));
 	}
 
 	public void render() {
@@ -85,6 +90,8 @@ public class WorldRenderer {
 		default:
 			break;
 		}
+		starEffect.setPosition(x, y);
+		starEffect.draw(batch, Gdx.graphics.getDeltaTime());
 	}
 
 	private void renderZombies() {

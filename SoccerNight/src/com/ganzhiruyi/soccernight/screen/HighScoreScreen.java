@@ -69,7 +69,7 @@ public class HighScoreScreen implements Screen {
 		table.add(list).width(200).center().expandX();
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
-		// Gdx.input.setCatchBackKey(true);
+		Gdx.input.setCatchBackKey(true);
 	}
 
 	@Override

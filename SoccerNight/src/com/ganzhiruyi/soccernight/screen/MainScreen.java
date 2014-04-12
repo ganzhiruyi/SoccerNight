@@ -1,6 +1,10 @@
 package com.ganzhiruyi.soccernight.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -22,6 +26,7 @@ import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.object.ParticleEffectActor;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.utils.CustomDialog;
 import com.ganzhiruyi.soccernight.utils.Settings;
 
 public class MainScreen implements Screen {
@@ -39,6 +44,8 @@ public class MainScreen implements Screen {
 	private Sound buttonSound;
 	private Music mainBgm;
 	private CheckBox cbSound;
+	private CustomDialog mDialog = null;
+	private boolean isDialogShow = false;
 
 	public MainScreen(SoccerNight game) {
 		// init the main screen
@@ -99,8 +106,10 @@ public class MainScreen implements Screen {
 		table.setFillParent(true);
 		Drawable up, down;
 		up = new TextureRegionDrawable(SoccerNight.mAltas.findRegion("btn"));
-		down = new TextureRegionDrawable(SoccerNight.mAltas.findRegion("btn_press"));
-		TextButtonStyle btnStyle = new TextButtonStyle(up, down, down, Assets.font);
+		down = new TextureRegionDrawable(
+				SoccerNight.mAltas.findRegion("btn_press"));
+		TextButtonStyle btnStyle = new TextButtonStyle(up, down, down,
+				Assets.font);
 		btnStart = new TextButton(STR_START, btnStyle);
 		btnScore = new TextButton(STR_SCORE, btnStyle);
 		btnSetting = new TextButton(STR_SETTING, btnStyle);
@@ -175,7 +184,7 @@ public class MainScreen implements Screen {
 				}
 			}
 		});
-		bg.addListener(new InputListener(){
+		bg.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -207,7 +216,55 @@ public class MainScreen implements Screen {
 		}
 		initMusic();
 		Settings.getInstance().playMusic(mainBgm);
-		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setCatchBackKey(true);
+		Gdx.input.setInputProcessor(new InputMultiplexer(createBackProcessor(),
+				stage));
+	}
+
+	private InputProcessor createBackProcessor() {
+		InputProcessor backProcessor = new InputAdapter() {
+			@Override
+			public boolean keyDown(int keycode) {
+				if (keycode == Keys.BACK) {
+					if (!isDialogShow) {
+						createDialog();
+						mDialog.show(stage);
+						isDialogShow = true;
+					}
+				}
+				return false;
+			}
+		};
+		return backProcessor;
+	}
+	private void createDialog(){
+		mDialog = new CustomDialog("Exit game", Assets.skin);
+		mDialog.text("You want to leave?")
+				.button("YES", new InputListener() {
+					public boolean touchDown(InputEvent event,
+							float x, float y, int pointer,
+							int button) {
+						return true;
+					};
+					@Override
+					public void touchUp(InputEvent event, float x, float y,
+							int pointer, int button) {
+						isDialogShow = false;
+						Gdx.app.exit();
+					}
+				}).button("NO", new InputListener() {
+					public boolean touchDown(InputEvent event,
+							float x, float y, int pointer,
+							int button) {
+						return true;
+					}
+					@Override
+					public void touchUp(InputEvent event, float x, float y,
+							int pointer, int button) {
+						isDialogShow = false;
+					}
+				});
+		
 	}
 
 	@Override

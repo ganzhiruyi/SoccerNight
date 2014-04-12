@@ -70,6 +70,7 @@ public class SettingScreen implements Screen {
 		table.add(back).bottom().left().width(80).height(80).pad(10);
 		table.add(diffBox).center().width(200).height(80).expand();
 		stage.addActor(table);
+		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(stage);
 	}
 

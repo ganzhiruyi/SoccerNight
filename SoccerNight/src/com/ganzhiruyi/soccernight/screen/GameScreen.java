@@ -65,7 +65,6 @@ public class GameScreen implements Screen {
 		world = new World(listener);
 		renderer = new WorldRenderer(batch, world);
 		state = GAME_RUNNING;
-
 	}
 
 	private void initAssets() {

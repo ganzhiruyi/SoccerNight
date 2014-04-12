@@ -7,9 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -23,7 +21,6 @@ public class LoadScreen implements Screen {
 	private SoccerNight game;
 	private Stage stage;
 	private float stateTime = 0;
-	private TextureAtlas atlas;
 	public LoadScreen(SoccerNight game) {
 		this.game = game;
 	}
@@ -64,6 +61,7 @@ public class LoadScreen implements Screen {
 		loadImage.addAction(Actions.repeat(100, Actions.rotateBy(-360, 1f)));
 		stage.addActor(loadTable);
 		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setCatchBackKey(true);
 	}
 	private void loadAsset(){
 		AssetManager manager = SoccerNight.getAssetManager();

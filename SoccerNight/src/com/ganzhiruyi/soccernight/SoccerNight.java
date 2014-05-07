@@ -10,6 +10,7 @@ import com.ganzhiruyi.soccernight.screen.HighScoreScreen;
 import com.ganzhiruyi.soccernight.screen.LoadScreen;
 import com.ganzhiruyi.soccernight.screen.MainScreen;
 import com.ganzhiruyi.soccernight.screen.SettingScreen;
+import com.ganzhiruyi.soccernight.screen.TutorialScreen;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Settings;
 
@@ -21,6 +22,7 @@ public class SoccerNight extends Game {
 	private GameScreen mGameScreen;
 	private LoadScreen mLoadScreen;
 	private SettingScreen mSettingScreen;
+	private TutorialScreen mTutorialScreen;
 	private static AssetManager mAssetManager;
 	public static TextureAtlas mAltas;
 
@@ -48,6 +50,7 @@ public class SoccerNight extends Game {
 		mGameScreen = new GameScreen(this);
 		mLoadScreen = new LoadScreen(this);
 		mSettingScreen = new SettingScreen(this);
+		mTutorialScreen = new TutorialScreen(this);
 	}
 
 	public void setMainScreen() {
@@ -73,6 +76,10 @@ public class SoccerNight extends Game {
 		setScreen(mLoadScreen);
 	}
 
+	public void setTutorialScreen() {
+		setScreen(mTutorialScreen);
+	}
+
 	@Override
 	public void render() {
 		super.render();
@@ -91,6 +98,8 @@ public class SoccerNight extends Game {
 			mLoadScreen.dispose();
 		if (mSettingScreen != null)
 			mSettingScreen.dispose();
+		if (mTutorialScreen != null)
+			mTutorialScreen.dispose();
 		if (mAssetManager != null)
 			mAssetManager.dispose();
 	}

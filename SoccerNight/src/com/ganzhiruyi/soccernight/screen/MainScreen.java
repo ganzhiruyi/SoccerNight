@@ -121,6 +121,14 @@ public class MainScreen implements Screen {
 		style.font = Assets.font;
 		cbSound = new CheckBox("", style);
 		cbSound.setChecked(Settings.getInstance().isSoundEnable());
+		logo.addListener(new InputListener(){
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				game.setTutorialScreen();
+				return false;
+			}
+		});
 		btnStart.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,

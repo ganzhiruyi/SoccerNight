@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.ganzhiruyi.soccernight.magic.Fire;
 import com.ganzhiruyi.soccernight.magic.Hurricane;
 import com.ganzhiruyi.soccernight.magic.Magic;
+import com.ganzhiruyi.soccernight.magic.Pumpkin;
 import com.ganzhiruyi.soccernight.object.Bob;
 import com.ganzhiruyi.soccernight.object.DynamicObject.DyObjectState;
 import com.ganzhiruyi.soccernight.soccer.BombSoccer;
@@ -18,7 +19,9 @@ import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.soccer.WaveSoccer;
 import com.ganzhiruyi.soccernight.utils.Config;
 import com.ganzhiruyi.soccernight.utils.Settings;
+import com.ganzhiruyi.soccernight.zombie.Eater;
 import com.ganzhiruyi.soccernight.zombie.Knight;
+import com.ganzhiruyi.soccernight.zombie.Player;
 import com.ganzhiruyi.soccernight.zombie.Princess;
 import com.ganzhiruyi.soccernight.zombie.Tracker;
 import com.ganzhiruyi.soccernight.zombie.Zombie;
@@ -113,6 +116,10 @@ public class World {
 			zombies.add(new Tracker(x, y));
 		else if (type == 1)
 			zombies.add(new Knight(x, y));
+		else if (type == 3)
+			zombies.add(new Eater(x, y));
+		else if (type == 4)
+			zombies.add(new Player(x, y));
 		else if (type == 2) {
 			zombies.add(new Princess(x, y));
 			isPrincessShow = true;
@@ -199,6 +206,8 @@ public class World {
 				else if (y < -1.5f)
 					y = -1.5f;
 				z.update(deltaTime, x, y);
+			} else if (z instanceof Eater) {
+				z.update(deltaTime, x, y);
 			} else if (z instanceof Princess) {
 				z.update(deltaTime, x, y);
 				Vector2 vec = new Vector2(0, 0);
@@ -247,6 +256,10 @@ public class World {
 			magic = new Fire(x, y);
 			magic.update(deltaTime, vec.x, vec.y);
 			magics.add(magic);
+		} else if (type == 2) {
+			magic = new Pumpkin(x, y);
+			magic.update(deltaTime, vec.x, vec.y);
+			magics.add(magic);
 		}
 	}
 
@@ -261,6 +274,10 @@ public class World {
 			addZombie(0, rand.nextInt(4));
 		else if (nextObject == 49)
 			addZombie(1, rand.nextInt(4));
+		else if (nextObject == 47)
+			addZombie(3, rand.nextInt(4));
+		else if (nextObject == 46)
+			addZombie(4, rand.nextInt(4));
 	}
 
 	private void checkCollision(float deltaTime) {
@@ -314,18 +331,36 @@ public class World {
 				s.roll(deltaTime);
 			} else if (s.getState() == DyObjectState.DEAD) {
 				soccers.remove(i);
-			} else if (OverlapTester.overlapRectangles(bob.bounds, s.bounds)) {
-				float accelX = bob.velocity.x;
-				float accelY = bob.velocity.y;
-				if (s instanceof RoundSoccer) {
-					if (Math.abs(accelX) > Math.abs(accelY))
-						accelY = 0;
-					else if (Math.abs(accelX) < Math.abs(accelY))
-						accelX = 0;
+			} else {
+				if (OverlapTester.overlapRectangles(bob.bounds, s.bounds)) {
+					float accelX = bob.velocity.x;
+					float accelY = bob.velocity.y;
+					updateSoccer(s, deltaTime, accelX, accelY);
 				}
-				s.update(deltaTime, accelX, accelY);
+				// to check the eater wheather can eat the idle soccer
+				for (int j = 0; j < zombies.size(); j++) {
+					Zombie z = zombies.get(j);
+					if (z instanceof Eater
+							&& OverlapTester.overlapRectangles(s.bounds,
+									z.bounds)) {
+						if (z instanceof Player)
+							addMagic(2, s.position.x, s.position.y, deltaTime,
+									z.velocity);
+						soccers.remove(i);
+					}
+				}
 			}
 		}
+	}
+
+	private void updateSoccer(Soccer s, float delta, float accelX, float accelY) {
+		if (s instanceof RoundSoccer) {
+			if (Math.abs(accelX) > Math.abs(accelY))
+				accelY = 0;
+			else if (Math.abs(accelX) < Math.abs(accelY))
+				accelX = 0;
+		}
+		s.update(delta, accelX, accelY);
 	}
 
 	public Bob getBob() {

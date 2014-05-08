@@ -35,6 +35,7 @@ public abstract class DynamicObject extends GameObject {
 			state = DyObjectState.IDLE;
 			stateTime = 0;
 			velocity.x = velocity.y = 0;
+			//updatePosition();
 			return;
 		}
 		if (Math.abs(accelX) < 0.1)

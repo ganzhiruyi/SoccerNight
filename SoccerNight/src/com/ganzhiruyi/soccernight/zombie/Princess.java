@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class Princess extends Zombie {
 	private static final float PRINCESS_VELOCITY = 1f;
-	private static final float WIDTH = 34f;
-	private static final float HEIGHT = 50f;
+	private static final float WIDTH = 68f;
+	private static final float HEIGHT = 70f;
 	private static final float IDLE_LIMIT = 2;
 	public int blood;
 	public static int WALK = 0;

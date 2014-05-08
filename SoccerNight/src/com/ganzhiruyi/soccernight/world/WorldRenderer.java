@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ganzhiruyi.soccernight.magic.Fire;
 import com.ganzhiruyi.soccernight.magic.Hurricane;
 import com.ganzhiruyi.soccernight.magic.Magic;
+import com.ganzhiruyi.soccernight.magic.Pumpkin;
 import com.ganzhiruyi.soccernight.object.Bob;
 import com.ganzhiruyi.soccernight.soccer.BombSoccer;
 import com.ganzhiruyi.soccernight.soccer.LineSoccer;
@@ -19,7 +20,9 @@ import com.ganzhiruyi.soccernight.soccer.Soccer;
 import com.ganzhiruyi.soccernight.soccer.WaveSoccer;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.zombie.Eater;
 import com.ganzhiruyi.soccernight.zombie.Knight;
+import com.ganzhiruyi.soccernight.zombie.Player;
 import com.ganzhiruyi.soccernight.zombie.Princess;
 import com.ganzhiruyi.soccernight.zombie.Tracker;
 import com.ganzhiruyi.soccernight.zombie.Zombie;
@@ -38,7 +41,8 @@ public class WorldRenderer {
 		this.cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
 		this.cam.position.set(FRUSTUM_WIDTH / 2, FRUSTUM_HEIGHT / 2, 0);
 		starEffect = new ParticleEffect();
-		starEffect.load(Gdx.files.internal("particles/star.p"), Gdx.files.internal("particles"));
+		starEffect.load(Gdx.files.internal("particles/star.p"),
+				Gdx.files.internal("particles"));
 	}
 
 	public void render() {
@@ -82,7 +86,7 @@ public class WorldRenderer {
 			if (vx < 0) {
 				region = Assets.aniBobL.getKeyFrame(stateTime);
 				batch.draw(region, x, y, Bob.BOB_WIDTH, Bob.BOB_HEIGHT);
-			} else if (vx > 0) {
+			} else {
 				region = Assets.aniBobR.getKeyFrame(stateTime);
 				batch.draw(region, x, y, Bob.BOB_WIDTH, Bob.BOB_HEIGHT);
 			}
@@ -105,13 +109,19 @@ public class WorldRenderer {
 			float y = z.position.y;
 			switch (z.getState()) {
 			case IDLE:
-				if (z instanceof Tracker) {
+				if (z instanceof Tracker)
 					region = z.isRight ? Assets.aniTracker.idleR
 							: Assets.aniTracker.idleL;
-				} else if (z instanceof Knight) {
+				else if (z instanceof Knight)
 					region = z.isRight ? Assets.aniKnight.idleR
 							: Assets.aniKnight.idleL;
-				} else {
+				else if (z instanceof Player)
+					region = z.isRight ? Assets.aniPlayer.idleR
+							: Assets.aniPlayer.idleL;
+				else if (z instanceof Eater)
+					region = z.isRight ? Assets.aniEater.idleR
+							: Assets.aniEater.idleL;
+				else {
 					int move = ((Princess) z).getMove();
 					if (move == Princess.HACK)
 						region = z.isRight ? Assets.aniPriHackR
@@ -135,6 +145,10 @@ public class WorldRenderer {
 						region = Assets.aniTracker.aniL.getKeyFrame(stateTime);
 					else if (z instanceof Knight)
 						region = Assets.aniKnight.aniL.getKeyFrame(stateTime);
+					else if (z instanceof Player)
+						region = Assets.aniPlayer.aniL.getKeyFrame(stateTime);
+					else if (z instanceof Eater)
+						region = Assets.aniEater.aniL.getKeyFrame(stateTime);
 					else
 						region = Assets.aniPriWalkL.getKeyFrame(stateTime);
 					batch.draw(region, x, y, z.width, z.height);
@@ -143,6 +157,10 @@ public class WorldRenderer {
 						region = Assets.aniTracker.aniR.getKeyFrame(stateTime);
 					else if (z instanceof Knight)
 						region = Assets.aniKnight.aniR.getKeyFrame(stateTime);
+					else if (z instanceof Player)
+						region = Assets.aniPlayer.aniR.getKeyFrame(stateTime);
+					else if (z instanceof Eater)
+						region = Assets.aniEater.aniR.getKeyFrame(stateTime);
 					else
 						region = Assets.aniPriWalkR.getKeyFrame(stateTime);
 					batch.draw(region, x, y, z.width, z.height);
@@ -213,6 +231,8 @@ public class WorldRenderer {
 					region = Assets.aniHurricane.getKeyFrame(stateTime);
 				else if (magic instanceof Fire)
 					region = Assets.aniFire.getKeyFrame(stateTime);
+				else if (magic instanceof Pumpkin)
+					region = magic.isRight ? Assets.pumpkinL : Assets.pumpkinR;
 				batch.draw(region, x, y, Magic.WIDTH, Magic.HEIGHT);
 				break;
 			default:

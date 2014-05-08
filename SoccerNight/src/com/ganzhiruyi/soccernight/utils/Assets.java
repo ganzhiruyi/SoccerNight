@@ -22,8 +22,9 @@ public class Assets {
 	public static Animation aniPriWalkL, aniPriWalkR, aniPriDeadL, aniPriDeadR,
 			aniPriStabL, aniPriStabR, aniPriHackL, aniPriHackR;
 	public static Texture level_1_bg;
-	public static MoveAnimation aniKnight, aniTracker;
+	public static MoveAnimation aniKnight, aniTracker, aniEater, aniPlayer;
 	public static Animation aniHurricane, aniFire;
+	public static TextureRegion pumpkinL, pumpkinR;
 
 	public static void load() {
 		// load the source
@@ -62,7 +63,7 @@ public class Assets {
 				241);
 		waveSocIdle = regions[0][0];
 		aniWaveSoc = new Animation(0.2f, regions[0]);
-		
+
 		regions = new TextureRegion(loadTexture("bomb_soccer.png")).split(241,
 				241);
 		bombSocIdle = regions[0][0];
@@ -106,6 +107,8 @@ public class Assets {
 		// load zombie
 		aniTracker = loadAnimationOfZombie("tracker.png");
 		aniKnight = loadAnimationOfZombie("knight.png");
+		aniEater = loadAnimationOfZombie("eater.png");
+		aniPlayer = loadAnimationOfZombie("player.png");
 	}
 
 	private static void loadMagic() {
@@ -114,6 +117,8 @@ public class Assets {
 		aniHurricane = new Animation(0.4f, regions[0]);
 		regions = new TextureRegion(loadTexture("fire.png")).split(30, 29);
 		aniFire = new Animation(0.4f, regions[0]);
+		pumpkinL = new TextureRegion(loadTexture("pumpkin_l.png"));
+		pumpkinR = new TextureRegion(loadTexture("pumpkin_r.png"));
 	}
 
 	private static MoveAnimation loadAnimationOfZombie(String name) {

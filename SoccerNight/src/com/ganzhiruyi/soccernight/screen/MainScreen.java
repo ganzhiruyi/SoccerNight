@@ -11,9 +11,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -100,6 +102,18 @@ public class MainScreen implements Screen {
 		stage = new Stage(480, 320);
 		Image bg = new Image(Assets.backgroundRegion);
 		Image logo = new Image(SoccerNight.mAltas.findRegion("soccernight"));
+		Image clound = new Image(SoccerNight.mAltas.findRegion("clound"));
+		clound.setPosition(0, Config.SCREEN_HEIGHT - clound.getHeight());
+		clound.addAction(Actions.repeat(-1, Actions.sequence(Actions.moveTo(
+				Config.SCREEN_WIDTH - clound.getWidth(), Config.SCREEN_HEIGHT
+						- clound.getHeight(), 4, Interpolation.linear), Actions
+				.moveTo(0, Config.SCREEN_HEIGHT - clound.getHeight(), 4,
+						Interpolation.linear))));
+		logo.setOrigin(logo.getOriginX() + logo.getWidth() / 2,
+				logo.getOriginY() + logo.getHeight() / 2);
+		logo.addAction(Actions.repeat(1, Actions.sequence(
+				Actions.rotateTo(20, 0.5f), Actions.rotateTo(0, 0.5f),
+				Actions.rotateTo(-20, 0.5f), Actions.rotateTo(0, 0.5f))));
 		bg.setFillParent(true);
 		stage.addActor(bg);
 		Table table = new Table();
@@ -121,7 +135,7 @@ public class MainScreen implements Screen {
 		style.font = Assets.font;
 		cbSound = new CheckBox("", style);
 		cbSound.setChecked(Settings.getInstance().isSoundEnable());
-		logo.addListener(new InputListener(){
+		logo.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -211,6 +225,7 @@ public class MainScreen implements Screen {
 		table.row();
 		table.add(cbSound).bottom().right().expandX();
 		table.row();
+		stage.addActor(clound);
 		stage.addActor(table);
 		stage.addActor(starEffect);
 		float x = 0;
@@ -245,34 +260,34 @@ public class MainScreen implements Screen {
 		};
 		return backProcessor;
 	}
-	private void createDialog(){
+
+	private void createDialog() {
 		mDialog = new CustomDialog("Exit game", Assets.skin);
-		mDialog.text("You want to leave?")
-				.button("YES", new InputListener() {
-					public boolean touchDown(InputEvent event,
-							float x, float y, int pointer,
-							int button) {
-						return true;
-					};
-					@Override
-					public void touchUp(InputEvent event, float x, float y,
-							int pointer, int button) {
-						isDialogShow = false;
-						Gdx.app.exit();
-					}
-				}).button("NO", new InputListener() {
-					public boolean touchDown(InputEvent event,
-							float x, float y, int pointer,
-							int button) {
-						return true;
-					}
-					@Override
-					public void touchUp(InputEvent event, float x, float y,
-							int pointer, int button) {
-						isDialogShow = false;
-					}
-				});
-		
+		mDialog.text("You want to leave?").button("YES", new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				return true;
+			};
+
+			@Override
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				isDialogShow = false;
+				Gdx.app.exit();
+			}
+		}).button("NO", new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				return true;
+			}
+
+			@Override
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				isDialogShow = false;
+			}
+		});
+
 	}
 
 	@Override

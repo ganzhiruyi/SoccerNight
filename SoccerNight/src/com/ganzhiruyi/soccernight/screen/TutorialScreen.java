@@ -81,6 +81,7 @@ public class TutorialScreen implements Screen {
 		stage = new Stage(Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT);
 		isDialogShow = false;
 		createDialog();
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	@Override
@@ -280,7 +281,6 @@ public class TutorialScreen implements Screen {
 				t.add(mDialog).center();
 				stage.addActor(t);
 				isDialogShow = true;
-				Gdx.input.setInputProcessor(stage);
 			}
 			stage.act();
 			stage.draw();
@@ -409,7 +409,8 @@ public class TutorialScreen implements Screen {
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
 				mDialog.cancel();
-				init();
+				//init();
+				game.setTutorialScreen();
 			}
 		}).button("NO", new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,

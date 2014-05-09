@@ -325,12 +325,15 @@ public class World {
 				}
 				for (int k = 0; k < magics.size(); k++) {
 					Magic m = magics.get(k);
-					if (OverlapTester.overlapRectangles(s.bounds, m.bounds))
+					if (OverlapTester.overlapRectangles(s.bounds, m.bounds)){
 						magics.remove(k);
+						score++;
+					}
 				}
 				s.roll(deltaTime);
 			} else if (s.getState() == DyObjectState.DEAD) {
-				soccers.remove(i);
+				if (i < soccers.size())
+					soccers.remove(i);
 			} else {
 				if (OverlapTester.overlapRectangles(bob.bounds, s.bounds)) {
 					float accelX = bob.velocity.x;
@@ -346,7 +349,8 @@ public class World {
 						if (z instanceof Player)
 							addMagic(2, s.position.x, s.position.y, deltaTime,
 									z.velocity);
-						soccers.remove(i);
+						if (i < soccers.size())
+							soccers.remove(i);
 					}
 				}
 			}

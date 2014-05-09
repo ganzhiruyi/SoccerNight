@@ -24,72 +24,100 @@ grass
   orig: 241, 241
   offset: 0, 0
   index: -1
-moon
+net
   rotate: false
   xy: 1, 244
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-soccer
+pumpkin_l
   rotate: false
   xy: 696, 769
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-trophy
+pumpkin_r
   rotate: false
   xy: 1, 1
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-pause-pressed
+soccer
   rotate: false
-  xy: 253, 573
+  xy: 253, 496
+  size: 241, 241
+  orig: 241, 241
+  offset: 0, 0
+  index: -1
+trophy
+  rotate: false
+  xy: 496, 526
+  size: 241, 241
+  orig: 241, 241
+  offset: 0, 0
+  index: -1
+home
+  rotate: false
+  xy: 739, 603
   size: 164, 164
   orig: 164, 164
   offset: 0, 0
   index: -1
 phone
   rotate: false
-  xy: 453, 655
+  xy: 496, 412
   size: 234, 112
   orig: 234, 112
   offset: 0, 0
   index: -1
 clound
   rotate: false
-  xy: 689, 661
+  xy: 739, 495
   size: 174, 106
   orig: 174, 106
   offset: 0, 0
   index: -1
-pause
+record
   rotate: false
-  xy: 253, 407
+  xy: 732, 329
+  size: 164, 164
+  orig: 164, 164
+  offset: 0, 0
+  index: -1
+refresh
+  rotate: false
+  xy: 244, 321
+  size: 164, 164
+  orig: 164, 164
+  offset: 0, 0
+  index: -1
+resume
+  rotate: false
+  xy: 244, 155
   size: 164, 164
   orig: 164, 164
   offset: 0, 0
   index: -1
 sound_off
   rotate: false
-  xy: 244, 305
+  xy: 244, 53
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 sound_on
   rotate: false
-  xy: 244, 203
+  xy: 346, 53
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 btn
   rotate: false
-  xy: 244, 137
+  xy: 410, 346
   size: 128, 64
   split: 8, 9, 8, 8
   orig: 128, 64
@@ -97,7 +125,7 @@ btn
   index: -1
 btn_press
   rotate: false
-  xy: 244, 71
+  xy: 410, 280
   size: 128, 64
   split: 8, 9, 8, 8
   orig: 128, 64

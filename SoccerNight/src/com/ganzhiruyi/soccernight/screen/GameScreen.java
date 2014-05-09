@@ -1,6 +1,7 @@
 package com.ganzhiruyi.soccernight.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
@@ -14,6 +15,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
@@ -37,15 +43,36 @@ public class GameScreen implements Screen {
 	private WorldRenderer renderer;
 	private Music bgMusic;
 	private Sound bossAppearSound, pauseSound, successSound, gameoverSound;
-	private TextureRegion pauseRegion;
+	private Stage stage;
+	private boolean isShowMenu, isNeedStage;
+	private Table mMenu;
 
 	public GameScreen(SoccerNight game) {
 		this.game = game;
+	}
+
+	private void init() {
 		guiCam = new OrthographicCamera(Config.SCREEN_WIDTH,
 				Config.SCREEN_HEIGHT);
 		guiCam.position.set(Config.SCREEN_WIDTH / 2, Config.SCREEN_HEIGHT / 2,
 				0);
-		batch = new SpriteBatch();
+		stage = new Stage();
+		mMenu = new Table();
+		mMenu.setFillParent(true);
+		/*Image bg = new Image(Assets.level_1_bg);
+		bg.setFillParent(true);
+		bg.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				state = GAME_PAUSED;
+				bgMusic.pause();
+				Settings.getInstance().playSound(pauseSound);
+				return false;
+			}
+		});*/
+		batch = stage.getSpriteBatch();
+		//stage.addActor(bg);
 		listener = new WorldListener() {
 
 			@Override
@@ -65,10 +92,12 @@ public class GameScreen implements Screen {
 		world = new World(listener);
 		renderer = new WorldRenderer(batch, world);
 		state = GAME_RUNNING;
+		isShowMenu = isNeedStage = false;
+		initAssets();
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	private void initAssets() {
-		pauseRegion = SoccerNight.mAltas.findRegion("pause");
 		AssetManager manager = SoccerNight.getAssetManager();
 		bossAppearSound = manager.get("media/appear.wav", Sound.class);
 		pauseSound = manager.get("media/pause.wav", Sound.class);
@@ -114,20 +143,17 @@ public class GameScreen implements Screen {
 	}
 
 	private void updatePaused() {
-		if (Gdx.input.justTouched()) {
-			state = GAME_RUNNING;
-			Settings.getInstance().playMusic(bgMusic);
-			pauseSound.stop();
-		}
+		/*
+		 * if (Gdx.input.justTouched()) { state = GAME_RUNNING;
+		 * Settings.getInstance().playMusic(bgMusic); pauseSound.stop(); }
+		 */
 	}
 
 	private void updateRunning(float delta) {
-		if (Gdx.input.justTouched()) {
-			state = GAME_PAUSED;
-			bgMusic.pause();
-			Settings.getInstance().playSound(pauseSound);
-			return;
-		}
+		/*
+		 * if (Gdx.input.isTouched()) { state = GAME_PAUSED; bgMusic.pause();
+		 * Settings.getInstance().playSound(pauseSound); return; }
+		 */
 		ApplicationType appType = Gdx.app.getType();
 		float accelX = 0, accelY = 0;
 		if (appType == ApplicationType.Android
@@ -196,6 +222,8 @@ public class GameScreen implements Screen {
 			break;
 		}
 		batch.end();
+		stage.act();
+		stage.draw();
 	}
 
 	private void drawLevelEnd() {
@@ -211,7 +239,54 @@ public class GameScreen implements Screen {
 	}
 
 	private void drawPaused() {
-		batch.draw(pauseRegion, Config.SCREEN_WIDTH/2, Config.SCREEN_HEIGHT/2, 60, 60);
+		if (!isShowMenu) {
+			Image home = new Image(SoccerNight.mAltas.findRegion("home"));
+			Image resume = new Image(SoccerNight.mAltas.findRegion("resume"));
+			Image refresh = new Image(SoccerNight.mAltas.findRegion("refresh"));
+			home.addListener(new InputListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y,
+						int pointer, int button) {
+					System.out
+							.println("------------------click home :" + state);
+					game.setMainScreen();
+					isShowMenu = isNeedStage = false;
+					mMenu.clearChildren();
+					return false;
+				}
+			});
+			resume.addListener(new InputListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y,
+						int pointer, int button) {
+					state = GAME_RUNNING;
+					System.out.println("------------------click resume :"
+							+ state);
+					Settings.getInstance().playMusic(bgMusic);
+					pauseSound.stop();
+					isShowMenu = isNeedStage = false;
+					mMenu.clearChildren();
+					return false;
+				}
+			});
+			refresh.addListener(new InputListener() {
+				@Override
+				public boolean touchDown(InputEvent event, float x, float y,
+						int pointer, int button) {
+					System.out.println("------------------click refresh :"
+							+ state);
+					game.setGameScreen();
+					isShowMenu = isNeedStage = false;
+					mMenu.clearChildren();
+					return false;
+				}
+			});
+			mMenu.add(home).pad(20);
+			mMenu.add(refresh).pad(20);
+			mMenu.add(resume).center().pad(20);
+			stage.addActor(mMenu);
+			isShowMenu = isNeedStage = true;
+		}
 	}
 
 	private void drawRunning(float delta) {
@@ -230,11 +305,12 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		stage.setViewport(width, height);
 	}
 
 	@Override
 	public void show() {
-		initAssets();
+		init();
 	}
 
 	@Override

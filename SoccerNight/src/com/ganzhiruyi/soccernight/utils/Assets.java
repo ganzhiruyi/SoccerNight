@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.ganzhiruyi.soccernight.SoccerNight;
 
 public class Assets {
 	public static Texture background;
@@ -20,11 +21,12 @@ public class Assets {
 	public static Animation aniRedSoc, aniBlueSoc, aniRoundSoc, aniWaveSoc,
 			aniBombSoc;
 	public static Animation aniPriWalkL, aniPriWalkR, aniPriDeadL, aniPriDeadR,
-			aniPriStabL, aniPriStabR, aniPriHackL, aniPriHackR;
+			aniPriStabL, aniPriStabR, aniPriHackL, aniPriHackR, aniPriWaveL,
+			aniPriWaveR;
 	public static Texture level_1_bg;
 	public static MoveAnimation aniKnight, aniTracker, aniEater, aniPlayer;
 	public static Animation aniHurricane, aniFire;
-	public static TextureRegion pumpkinL, pumpkinR;
+	public static TextureRegion pumpkinL, pumpkinR, net;
 
 	public static void load() {
 		// load the source
@@ -99,6 +101,12 @@ public class Assets {
 		tmp = new TextureRegion(loadTexture("hack.png")).split(120, 120);
 		aniPriHackR = new Animation(0.2f, priRegions[0]);
 		aniPriHackL = new Animation(0.2f, reversePicture(tmp[0]));
+		// wave
+		priRegions = new TextureRegion(loadTexture("wave.png")).split(120, 120);
+		tmp = new TextureRegion(loadTexture("wave.png")).split(120, 120);
+		aniPriWaveR = new Animation(0.2f, priRegions[0]);
+		aniPriWaveL = new Animation(0.2f, reversePicture(tmp[0]));
+		// wave
 		// walk
 		priRegions = new TextureRegion(loadTexture("walk.png")).split(120, 120);
 		tmp = new TextureRegion(loadTexture("walk.png")).split(120, 120);
@@ -117,8 +125,9 @@ public class Assets {
 		aniHurricane = new Animation(0.4f, regions[0]);
 		regions = new TextureRegion(loadTexture("fire.png")).split(30, 29);
 		aniFire = new Animation(0.4f, regions[0]);
-		pumpkinL = new TextureRegion(loadTexture("pumpkin_l.png"));
-		pumpkinR = new TextureRegion(loadTexture("pumpkin_r.png"));
+		pumpkinL = SoccerNight.mAltas.findRegion("pumpkin_l");
+		pumpkinR = SoccerNight.mAltas.findRegion("pumpkin_r");
+		net = SoccerNight.mAltas.findRegion("net");
 	}
 
 	private static MoveAnimation loadAnimationOfZombie(String name) {

@@ -29,9 +29,9 @@ public class SoccerNight extends Game {
 	@Override
 	public void create() {
 		mAssetManager = new AssetManager();
+		mAltas = new TextureAtlas(Gdx.files.internal("skin/skin.pack"));
 		Assets.load();
 		Settings.getInstance().load();
-		mAltas = new TextureAtlas(Gdx.files.internal("skin/skin.pack"));
 		initScreens();
 		setLoadScreen();
 		fps = new FPSLogger();

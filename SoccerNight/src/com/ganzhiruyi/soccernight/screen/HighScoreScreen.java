@@ -52,6 +52,7 @@ public class HighScoreScreen implements Screen {
 		Image trophy = new Image(SoccerNight.mAltas.findRegion("trophy"));
 		bg.setFillParent(true);
 		stage.addActor(bg);
+		
 		list = new List(Settings.getInstance().getScores().toArray(), Assets.skin);
 		Image back = new Image(SoccerNight.mAltas.findRegion("soccer"));
 		back.addListener(new InputListener(){

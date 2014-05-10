@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ganzhiruyi.soccernight.magic.Fire;
 import com.ganzhiruyi.soccernight.magic.Hurricane;
 import com.ganzhiruyi.soccernight.magic.Magic;
+import com.ganzhiruyi.soccernight.magic.Net;
 import com.ganzhiruyi.soccernight.magic.Pumpkin;
 import com.ganzhiruyi.soccernight.object.Bob;
 import com.ganzhiruyi.soccernight.soccer.BombSoccer;
@@ -55,7 +56,7 @@ public class WorldRenderer {
 	private void renderBackground() {
 		batch.disableBlending();
 		batch.begin();
-		batch.draw(Assets.level_1_bg, 0, 0, Config.SCREEN_WIDTH,
+		batch.draw(Assets.background, 0, 0, Config.SCREEN_WIDTH,
 				Config.SCREEN_HEIGHT);
 		batch.end();
 	}
@@ -130,6 +131,10 @@ public class WorldRenderer {
 					else if (move == Princess.STAB)
 						region = z.isRight ? Assets.aniPriStabR
 								.getKeyFrame(stateTime) : Assets.aniPriStabL
+								.getKeyFrame(stateTime);
+					else if (move == Princess.WAVE)
+						region = z.isRight ? Assets.aniPriWaveR
+								.getKeyFrame(stateTime) : Assets.aniPriWaveL
 								.getKeyFrame(stateTime);
 					else
 						region = z.isRight ? Assets.aniPriDeadR
@@ -225,12 +230,18 @@ public class WorldRenderer {
 			float y = magic.position.y;
 			switch (magic.getState()) {
 			case IDLE:
+				if (magic instanceof Net){
+					region = Assets.net;
+					batch.draw(region, x, y, Magic.WIDTH, Magic.HEIGHT);
+				}
 				break;
 			case MOVING:
 				if (magic instanceof Hurricane)
 					region = Assets.aniHurricane.getKeyFrame(stateTime);
 				else if (magic instanceof Fire)
 					region = Assets.aniFire.getKeyFrame(stateTime);
+				else if (magic instanceof Net)
+					region = Assets.net;
 				else if (magic instanceof Pumpkin)
 					region = magic.isRight ? Assets.pumpkinL : Assets.pumpkinR;
 				batch.draw(region, x, y, Magic.WIDTH, Magic.HEIGHT);

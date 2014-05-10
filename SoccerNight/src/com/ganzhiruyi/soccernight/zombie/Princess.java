@@ -11,7 +11,8 @@ public class Princess extends Zombie {
 	public static int WALK = 0;
 	public static int STAB = 1;
 	public static int HACK = 2;
-	public static int DEAD = 3;
+	public static int WAVE = 3;
+	public static int DEAD = 4;
 	private int move;
 	private float preMoveTime;
 	private Random rand;
@@ -44,12 +45,16 @@ public class Princess extends Zombie {
 			}
 		} else {
 			int nextMove = rand.nextInt(100);
-			if (nextMove == 50) {
+			if (nextMove == 30) {
 				move = STAB;
 				state = DyObjectState.IDLE;
 				preMoveTime = stateTime;
-			} else if (nextMove == 99) {
+			} else if (nextMove == 60) {
 				move = HACK;
+				state = DyObjectState.IDLE;
+				preMoveTime = stateTime;
+			} else if (nextMove == 90) {
+				move = WAVE;
 				state = DyObjectState.IDLE;
 				preMoveTime = stateTime;
 			} else
@@ -65,9 +70,11 @@ public class Princess extends Zombie {
 		this.hurricaneNum += magicNum;
 		this.hurricaneNum = Math.max(this.hurricaneNum, 0);
 	}
+
 	public int getFireNum() {
 		return fireNum;
 	}
+
 	public void addFireNum(int fireNum) {
 		this.fireNum += fireNum;
 		this.fireNum = Math.max(this.fireNum, 0);

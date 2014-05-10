@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.ganzhiruyi.soccernight.magic.Fire;
 import com.ganzhiruyi.soccernight.magic.Hurricane;
 import com.ganzhiruyi.soccernight.magic.Magic;
+import com.ganzhiruyi.soccernight.magic.Net;
 import com.ganzhiruyi.soccernight.magic.Pumpkin;
 import com.ganzhiruyi.soccernight.object.Bob;
 import com.ganzhiruyi.soccernight.object.DynamicObject.DyObjectState;
@@ -58,7 +59,8 @@ public class World {
 	private int state;
 	private int zombieCount;
 	private int score;
-	private boolean isPrincessShow;
+	private int timeScore;
+	private boolean isPrincessShow, isBobCanMove, hasNextNetMagic;
 
 	public World(WorldListener listener) {
 		this.listener = listener;
@@ -75,6 +77,7 @@ public class World {
 		state = WORLD_STATE_RUNNING;
 		zombieCount = score = 0;
 		isPrincessShow = false;
+		isBobCanMove = hasNextNetMagic = true;
 		// init difficulty
 		int diff = Settings.getInstance().getDifficulty();
 		if (diff == 0) {
@@ -175,7 +178,8 @@ public class World {
 	}
 
 	private void updateBob(float deltaTime, float accelX, float accelY) {
-		bob.update(deltaTime, accelX, accelY);
+		if (isBobCanMove)
+			bob.update(deltaTime, accelX, accelY);
 	}
 
 	private void updateZombies(float deltaTime) {
@@ -227,6 +231,15 @@ public class World {
 						addMagic(1, z.position.x, z.position.y, deltaTime, vec);
 						((Princess) z).addFireNum(3);
 					}
+				} else if (move == Princess.WAVE) {
+					if (hasNextNetMagic) {
+						addMagic(3, z.position.x, z.position.y, deltaTime, vec);
+						vec.y += 2;
+						addMagic(3, z.position.x, z.position.y, deltaTime, vec);
+						vec.y = -vec.y;
+						addMagic(3, z.position.x, z.position.y, deltaTime, vec);
+						hasNextNetMagic = false;
+					}
 				} else if (move == Princess.WALK) {
 					((Princess) z).addHurricaneNum(-2);
 					((Princess) z).addFireNum(-3);
@@ -238,9 +251,16 @@ public class World {
 	private void updateMagic(float deltaTime) {
 		for (int i = 0; i < magics.size(); i++) {
 			Magic magic = magics.get(i);
-			if (magic.getState() == DyObjectState.DEAD)
+			if (magic.getState() == DyObjectState.DEAD) {
+				if (magic instanceof Net) {
+					if (((Net) magic).getCatched())
+						isBobCanMove = true;
+					hasNextNetMagic = true;
+				}
 				magics.remove(i);
-			else if (magic.getState() == DyObjectState.MOVING)
+			} else if (magic.getState() == DyObjectState.MOVING)
+				magic.update(deltaTime, magic.velocity.x, magic.velocity.y);
+			else if (magic instanceof Net)
 				magic.update(deltaTime, magic.velocity.x, magic.velocity.y);
 		}
 	}
@@ -258,6 +278,10 @@ public class World {
 			magics.add(magic);
 		} else if (type == 2) {
 			magic = new Pumpkin(x, y);
+			magic.update(deltaTime, vec.x, vec.y);
+			magics.add(magic);
+		} else if (type == 3) {
+			magic = new Net(x, y);
 			magic.update(deltaTime, vec.x, vec.y);
 			magics.add(magic);
 		}
@@ -298,8 +322,13 @@ public class World {
 	private void collisionMagic() {
 		for (Magic m : magics) {
 			if (OverlapTester.overlapRectangles(bob.bounds, m.bounds)) {
-				state = WORLD_STATE_GAME_OVER;
-				break;
+				if (m instanceof Net) {
+					isBobCanMove = false;
+					((Net) m).setCatched(true);
+				} else {
+					state = WORLD_STATE_GAME_OVER;
+					break;
+				}
 			}
 		}
 	}
@@ -325,7 +354,7 @@ public class World {
 				}
 				for (int k = 0; k < magics.size(); k++) {
 					Magic m = magics.get(k);
-					if (OverlapTester.overlapRectangles(s.bounds, m.bounds)){
+					if (OverlapTester.overlapRectangles(s.bounds, m.bounds)) {
 						magics.remove(k);
 						score++;
 					}

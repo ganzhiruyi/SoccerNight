@@ -11,7 +11,7 @@ public abstract class DynamicObject extends GameObject {
 	public boolean isUp = true;
 
 	public enum DyObjectState {
-		IDLE, DEAD, MOVING;
+		IDLE, MOVING, DEAD;
 	}
 
 	public enum EdgeType {

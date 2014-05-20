@@ -82,13 +82,13 @@ public class World {
 		int diff = Settings.getInstance().getDifficulty();
 		if (diff == 0) {
 			LIMIT_NUM_ZOMBIE = 5;
-			LEVEL_NUM_ZOMBIE = 10;
+			LEVEL_NUM_ZOMBIE = 20;
 		} else if (diff == 1) {
 			LIMIT_NUM_ZOMBIE = 10;
-			LEVEL_NUM_ZOMBIE = 20;
+			LEVEL_NUM_ZOMBIE = 40;
 		} else if (diff == 2) {
 			LIMIT_NUM_ZOMBIE = 15;
-			LEVEL_NUM_ZOMBIE = 30;
+			LEVEL_NUM_ZOMBIE = 100;
 		}
 	}
 

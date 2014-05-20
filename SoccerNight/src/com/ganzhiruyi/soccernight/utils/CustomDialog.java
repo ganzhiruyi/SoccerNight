@@ -20,13 +20,7 @@ public class CustomDialog extends Dialog {
 
 	@Override
 	public Dialog button(String text, Object object) {
-		Drawable up, down;
-		up = new TextureRegionDrawable(SoccerNight.mAltas.findRegion("btn"));
-		down = new TextureRegionDrawable(
-				SoccerNight.mAltas.findRegion("btn_press"));
-		TextButtonStyle btnStyle = new TextButtonStyle(up, down, down,
-				Assets.font);
-		TextButton btn = new TextButton(text, btnStyle);
+		CustomButton btn = new CustomButton(text, Assets.skin);
 		btn.addListener((InputListener) object);
 		button(btn);
 		return this;

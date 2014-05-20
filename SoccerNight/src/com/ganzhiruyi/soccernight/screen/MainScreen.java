@@ -19,15 +19,17 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.ganzhiruyi.soccernight.SoccerNight;
 import com.ganzhiruyi.soccernight.object.ParticleEffectActor;
 import com.ganzhiruyi.soccernight.utils.Assets;
 import com.ganzhiruyi.soccernight.utils.Config;
+import com.ganzhiruyi.soccernight.utils.CustomButton;
 import com.ganzhiruyi.soccernight.utils.CustomDialog;
 import com.ganzhiruyi.soccernight.utils.Settings;
 
@@ -36,10 +38,18 @@ public class MainScreen implements Screen {
 	public static final String STR_START = "Start";
 	public static final String STR_SCORE = "Score";
 	public static final String STR_SETTING = "Setting";
+	public static final String STR_STORY = "Bob is a football fan."
+			+ "one day when Bob came to find a witch occupy the stadium,"
+			+ "the stadium as she places a magical experiment, various evil experiments."
+			+ "In order to regain the stadium, stop the witch experiment, Bob challenged the witch. "
+			+ "But a witch with a powerful magic to help, as well as other witches."
+			+ "Bob extraordinary difficult to win."
+			+ "Fortunately, the soccer also has the magic because the experiment,"
+			+ "Bob can use these soccers to defeat the witch.";
 
 	private SoccerNight game;
 	private OrthographicCamera camera;
-	private TextButton btnStart, btnScore, btnSetting;
+	private CustomButton btnStart, btnScore, btnSetting;
 	float stateTime = 0;
 	private Stage stage;
 	private ParticleEffectActor starEffect;
@@ -94,21 +104,34 @@ public class MainScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.setViewport(width, height, true);
-	}
-
-	@Override
-	public void show() {
-		stage = new Stage(480, 320);
+		final int W = width,H = height;
+		stage = new Stage();
 		Image bg = new Image(Assets.backgroundRegion);
 		Image logo = new Image(SoccerNight.mAltas.findRegion("soccernight"));
+		Image moon = new Image(SoccerNight.mAltas.findRegion("moon"));
+		Image book = new Image(SoccerNight.mAltas.findRegion("book"));
+		Image wand = new Image(SoccerNight.mAltas.findRegion("wand"));
+		Image record = new Image(SoccerNight.mAltas.findRegion("record"));
 		Image clound = new Image(SoccerNight.mAltas.findRegion("clound"));
-		clound.setPosition(0, Config.SCREEN_HEIGHT - clound.getHeight());
+		clound.setSize(100, 80);
+		int offsetY = height / 12, offsetX = width / 30;
+		float distY = height - clound.getHeight() - offsetY;
+		record.setSize(80, 80);
+		float distX = width - record.getWidth() - offsetX;
+		record.setPosition(distX, distY);
+		book.setSize(80, 80);
+		distX -= (book.getWidth() + offsetX);
+		book.setPosition(distX, distY);
+		wand.setSize(80, 80);
+		distX -= (wand.getWidth() + offsetX);
+		wand.setPosition(distX, distY);
+
+		moon.setSize(200, 200);
+		moon.setPosition(offsetX, height - moon.getHeight());
+		clound.setPosition(0, distY);
 		clound.addAction(Actions.repeat(-1, Actions.sequence(Actions.moveTo(
-				Config.SCREEN_WIDTH - clound.getWidth(), Config.SCREEN_HEIGHT
-						- clound.getHeight(), 4, Interpolation.linear), Actions
-				.moveTo(0, Config.SCREEN_HEIGHT - clound.getHeight(), 4,
-						Interpolation.linear))));
+				distX - clound.getWidth(), distY, 6, Interpolation.linear),
+				Actions.moveTo(0, distY, 6, Interpolation.linear))));
 		logo.setOrigin(logo.getOriginX() + logo.getWidth() / 2,
 				logo.getOriginY() + logo.getHeight() / 2);
 		logo.addAction(Actions.repeat(1, Actions.sequence(
@@ -118,15 +141,9 @@ public class MainScreen implements Screen {
 		stage.addActor(bg);
 		Table table = new Table();
 		table.setFillParent(true);
-		Drawable up, down;
-		up = new TextureRegionDrawable(SoccerNight.mAltas.findRegion("btn"));
-		down = new TextureRegionDrawable(
-				SoccerNight.mAltas.findRegion("btn_press"));
-		TextButtonStyle btnStyle = new TextButtonStyle(up, down, down,
-				Assets.font);
-		btnStart = new TextButton(STR_START, btnStyle);
-		btnScore = new TextButton(STR_SCORE, btnStyle);
-		btnSetting = new TextButton(STR_SETTING, btnStyle);
+		btnStart = new CustomButton(STR_START, Assets.skin);
+		btnScore = new CustomButton(STR_SCORE, Assets.skin);
+		btnSetting = new CustomButton(STR_SETTING, Assets.skin);
 		CheckBoxStyle style = new CheckBoxStyle();
 		style.checkboxOn = new TextureRegionDrawable(
 				SoccerNight.mAltas.findRegion("sound_on"));
@@ -135,11 +152,48 @@ public class MainScreen implements Screen {
 		style.font = Assets.font;
 		cbSound = new CheckBox("", style);
 		cbSound.setChecked(Settings.getInstance().isSoundEnable());
-		logo.addListener(new InputListener() {
+		wand.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				game.setTutorialScreen();
+				return false;
+			}
+		});
+		record.addListener(new InputListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				final Window w = new Window("STORY", Assets.skin);
+				w.setSize(600, 400);
+				Label l = new Label(STR_STORY, Assets.skin);
+				l.setWrap(true);
+				Table container = new Table();
+				container.setFillParent(true);
+				Table t = new Table();
+				ScrollPane scroll = new ScrollPane(t, Assets.skin);
+				scroll.setScrollingDisabled(true, true);
+				t.add(l).center().width(400);
+				container.add(scroll).fill().expand();
+				container.row();
+				container.defaults().center().pad(20);
+				CustomButton close = new CustomButton("close", Assets.skin);
+				close.addListener(new InputListener(){
+					@Override
+					public boolean touchDown(InputEvent event, float x,
+							float y, int pointer, int button) {
+						return true;
+					}
+					@Override
+					public void touchUp(InputEvent event, float x, float y,
+							int pointer, int button) {
+						stage.getRoot().removeActor(w);
+					}
+				});
+				container.add(close);
+				w.addActor(container);
+				w.setPosition((W - w.getWidth())/2,  (H-w.getHeight())/2);
+				stage.addActor(w);
 				return false;
 			}
 		});
@@ -225,7 +279,11 @@ public class MainScreen implements Screen {
 		table.row();
 		table.add(cbSound).bottom().right().expandX();
 		table.row();
+		stage.addActor(moon);
 		stage.addActor(clound);
+		stage.addActor(wand);
+		stage.addActor(book);
+		stage.addActor(record);
 		stage.addActor(table);
 		stage.addActor(starEffect);
 		float x = 0;
@@ -242,6 +300,10 @@ public class MainScreen implements Screen {
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(new InputMultiplexer(createBackProcessor(),
 				stage));
+	}
+
+	@Override
+	public void show() {
 	}
 
 	private InputProcessor createBackProcessor() {

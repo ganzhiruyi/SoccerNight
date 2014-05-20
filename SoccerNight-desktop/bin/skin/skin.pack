@@ -17,107 +17,114 @@ loading
   orig: 250, 250
   offset: 0, 0
   index: -1
-grass
+book
   rotate: false
   xy: 453, 769
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-net
+grass
   rotate: false
   xy: 1, 244
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-pumpkin_l
+moon
   rotate: false
   xy: 696, 769
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-pumpkin_r
+net
   rotate: false
   xy: 1, 1
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-soccer
+pumpkin_l
   rotate: false
   xy: 253, 496
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-trophy
+pumpkin_r
   rotate: false
   xy: 496, 526
   size: 241, 241
   orig: 241, 241
   offset: 0, 0
   index: -1
-home
+soccer
   rotate: false
-  xy: 739, 603
-  size: 164, 164
-  orig: 164, 164
+  xy: 739, 526
+  size: 241, 241
+  orig: 241, 241
+  offset: 0, 0
+  index: -1
+trophy
+  rotate: false
+  xy: 496, 283
+  size: 241, 241
+  orig: 241, 241
+  offset: 0, 0
+  index: -1
+wand
+  rotate: false
+  xy: 739, 283
+  size: 241, 241
+  orig: 241, 241
   offset: 0, 0
   index: -1
 phone
   rotate: false
-  xy: 496, 412
+  xy: 253, 382
   size: 234, 112
   orig: 234, 112
   offset: 0, 0
   index: -1
-clound
+home
   rotate: false
-  xy: 739, 495
-  size: 174, 106
-  orig: 174, 106
+  xy: 244, 216
+  size: 164, 164
+  orig: 164, 164
   offset: 0, 0
   index: -1
 record
   rotate: false
-  xy: 732, 329
+  xy: 244, 50
   size: 164, 164
   orig: 164, 164
   offset: 0, 0
   index: -1
 refresh
   rotate: false
-  xy: 244, 321
+  xy: 410, 117
   size: 164, 164
   orig: 164, 164
   offset: 0, 0
   index: -1
 resume
   rotate: false
-  xy: 244, 155
+  xy: 576, 117
   size: 164, 164
   orig: 164, 164
   offset: 0, 0
   index: -1
-sound_off
+clound
   rotate: false
-  xy: 244, 53
-  size: 100, 100
-  orig: 100, 100
-  offset: 0, 0
-  index: -1
-sound_on
-  rotate: false
-  xy: 346, 53
-  size: 100, 100
-  orig: 100, 100
+  xy: 742, 175
+  size: 174, 106
+  orig: 174, 106
   offset: 0, 0
   index: -1
 btn
   rotate: false
-  xy: 410, 346
+  xy: 410, 51
   size: 128, 64
   split: 8, 9, 8, 8
   orig: 128, 64
@@ -125,9 +132,23 @@ btn
   index: -1
 btn_press
   rotate: false
-  xy: 410, 280
+  xy: 540, 51
   size: 128, 64
   split: 8, 9, 8, 8
   orig: 128, 64
+  offset: 0, 0
+  index: -1
+sound_off
+  rotate: false
+  xy: 918, 181
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+sound_on
+  rotate: false
+  xy: 742, 73
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1

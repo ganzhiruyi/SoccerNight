@@ -119,9 +119,11 @@ public class MainScreen implements Screen {
 		record.setSize(80, 80);
 		float distX = width - record.getWidth() - offsetX;
 		record.setPosition(distX, distY);
+		/*
 		book.setSize(80, 80);
 		distX -= (book.getWidth() + offsetX);
 		book.setPosition(distX, distY);
+		*/
 		wand.setSize(80, 80);
 		distX -= (wand.getWidth() + offsetX);
 		wand.setPosition(distX, distY);
@@ -172,7 +174,7 @@ public class MainScreen implements Screen {
 				container.setFillParent(true);
 				Table t = new Table();
 				ScrollPane scroll = new ScrollPane(t, Assets.skin);
-				scroll.setScrollingDisabled(true, true);
+				scroll.setScrollingDisabled(false, false);
 				t.add(l).center().width(400);
 				container.add(scroll).fill().expand();
 				container.row();
@@ -282,7 +284,7 @@ public class MainScreen implements Screen {
 		stage.addActor(moon);
 		stage.addActor(clound);
 		stage.addActor(wand);
-		stage.addActor(book);
+		//stage.addActor(book);
 		stage.addActor(record);
 		stage.addActor(table);
 		stage.addActor(starEffect);
